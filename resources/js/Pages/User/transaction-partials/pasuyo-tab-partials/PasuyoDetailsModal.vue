@@ -32,7 +32,7 @@ const { getStatusSeverity, formatDate } = useTransactions();
             <template #header>
                 <div class="flex items-center justify-between">
                     <header>
-                        <h3 class="text-lg font-semibold text-zinc-900 dark:text-white">Pasayo Details</h3>
+                        <h3 class="text-lg font-semibold text-zinc-900 dark:text-white">Pasuyo Details</h3>
                         <div class="text-xs mt-2">
                             <Tag :value="pasuyo.status.replace('_', ' ')" :severity="getStatusSeverity(pasuyo.status)" />
                         </div>

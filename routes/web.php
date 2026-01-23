@@ -39,8 +39,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // inbox routes
     Route::get('/inbox', [App\Http\Controllers\InboxController::class, 'index'])->name('inbox.index');
-
     Route::put('/inbox/mark-as-read/{message}', [App\Http\Controllers\InboxController::class, 'markAsRead'])->name('inbox.mark-as-read');
+
+    // job routes
+    Route::get('/find-deliveries', [App\Http\Controllers\DeliveryController::class, 'index'])->name('delivery.index');
+
 });
 
 require __DIR__.'/auth.php';

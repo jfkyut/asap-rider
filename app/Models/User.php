@@ -59,4 +59,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(PickAndDrop::class);
     }
+
+    public function deliveries()
+    {
+        return $this->hasMany(\App\Models\Delivery\Delivery::class);
+    }
 }

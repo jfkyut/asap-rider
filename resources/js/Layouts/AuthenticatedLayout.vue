@@ -12,10 +12,15 @@ const items = [
         route: '/',
     },
     {
-        label: 'Transactions',
-        icon: 'ri-exchange-box-line',
-        route: '/transactions',
+        label: 'Find',
+        icon: 'ri-search-line',
+        route: '/find-deliveries',
     },
+    // {
+    //     label: 'Transactions',
+    //     icon: 'ri-exchange-box-line',
+    //     route: '/transactions',
+    // },
     // {
     //     label: 'Cart',
     //     icon: 'ri-shopping-cart-line',
@@ -53,8 +58,8 @@ const back = () => {
         <!-- header -->
         <div v-if="!route().current().includes('dashboard')" class="bg-teal-600 text-white px-2 py-1 flex items-center justify-between shadow-sm fixed top-0 left-0 right-0 z-30">
             <div>
-                <Button 
-                    @click="back" 
+                <Button
+                    @click="back"
                     severity="secondary"
                     variant="text"
                 >

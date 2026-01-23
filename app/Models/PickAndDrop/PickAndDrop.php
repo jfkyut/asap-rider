@@ -3,6 +3,7 @@
 namespace App\Models\PickAndDrop;
 
 use App\Models\User;
+use App\Models\Job\Job;
 use Illuminate\Database\Eloquent\Model;
 
 class PickAndDrop extends Model
@@ -32,5 +33,10 @@ class PickAndDrop extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function delivery()
+    {
+        return $this->hasOne(\App\Models\Delivery\Delivery::class);
     }
 }

@@ -36,7 +36,7 @@ const selectedPickAndDropId = ref(null);
                 <!-- Header -->
                 <div class="px-3 py-2.5 flex items-start justify-between gap-2">
                     <div class="flex items-start gap-2 flex-1 min-w-0">
-                        <Tag :value="pickAndDrop.status.replace('_', ' ')" :severity="getStatusSeverity(pickAndDrop.status)" class="flex-shrink-0 text-xs" />
+                        <Tag :value="pickAndDrop.status.replace('_', ' ') === 'pending' ? 'open' : pickAndDrop.status.replace('_', ' ')" :severity="getStatusSeverity(pickAndDrop.status)" class="flex-shrink-0 text-xs" />
                         <div class="min-w-0 flex-1">
                             <p class="text-xs font-semibold text-zinc-900 dark:text-white truncate">
                                 {{ pickAndDrop.sender_full_name }} → {{ pickAndDrop.receiver_full_name }}
@@ -55,7 +55,7 @@ const selectedPickAndDropId = ref(null);
                     <div class="flex-1 min-w-0 text-right">
                         <p class="text-zinc-600 dark:text-zinc-400 truncate">To: {{ pickAndDrop.receiver_location }}</p>
                     </div>
-                    <PickAndDropDetailsModal 
+                    <PickAndDropDetailsModal
                         :pick-and-drop="pickAndDrop"
                         :show="selectedPickAndDropId === pickAndDrop.id"
                         @close="selectedPickAndDropId = null"
