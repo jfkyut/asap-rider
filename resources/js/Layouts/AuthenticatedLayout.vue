@@ -18,7 +18,7 @@ const items = [
     },
     {
         label: 'Deliveries',
-        icon: 'ri-exchange-box-line',
+        icon: 'ri-e-bike-2-line',
         route: '/deliveries',
     },
     // {

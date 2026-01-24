@@ -44,6 +44,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // delivery routes
     Route::get('/deliveries', [App\Http\Controllers\DeliveryController::class, 'index'])->name('delivery.index');
     Route::get('/find-deliveries', [App\Http\Controllers\DeliveryController::class, 'create'])->name('delivery.create');
+    Route::post('/deliveries/store', [App\Http\Controllers\DeliveryController::class, 'store'])->name('delivery.store');
 
 });
 

@@ -65,11 +65,10 @@ watch(show, (show) => {
     if (show) {
         isLoadingRoute.value = true;
 
-        // If there are exactly two coordinates, fetch route data
-        if (parsedCoordinates.value.length === 2) {
-            const [start, end] = parsedCoordinates.value;
+        // If there are at least two coordinates, fetch route data
+        if (parsedCoordinates.value.length >= 2) {
             axios.post('https://api.openrouteservice.org/v2/directions/driving-car/geojson', {
-                coordinates: [start, end]
+                coordinates: parsedCoordinates.value
             }, {
                 headers: {
                     'Authorization': OPEN_ROUTE_SERVICE_KEY,
