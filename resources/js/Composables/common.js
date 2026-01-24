@@ -150,7 +150,7 @@ export const useCommon = () => {
                 Object.keys(obj).forEach(key => {
                     const value = obj[key];
                     const displayKey = parentKey ? `${parentKey}.${key}` : key;
-                    
+
                     if (value === null || value === undefined) {
                         items.push({ key: displayKey, value: String(value) });
                     } else if (typeof value === 'object') {
@@ -198,13 +198,38 @@ export const useCommon = () => {
         });
     };
 
-    return { 
-        isCopied, 
-        years, 
-        tableHeaderClass, 
-        barangays, 
+    const getMyLocation = () => {
+        return new Promise((resolve, reject) => {
+            if (!navigator.geolocation) {
+                reject(new Error("Geolocation is not supported by this browser."));
+                return;
+            }
 
-        copyText, 
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const coords = `${position.coords.longitude},${position.coords.latitude}`;
+
+                    resolve(coords); // Success!
+                },
+                (error) => {
+                    reject(error); // Failed!
+                },
+                {
+                    enableHighAccuracy: true,  // Changed to false - faster, less battery
+                    timeout: 10000,              // Increased from 5000 to 10000ms
+                    maximumAge: 0,
+                }
+            );
+        });
+    };
+
+    return {
+        isCopied,
+        years,
+        tableHeaderClass,
+        barangays,
+
+        copyText,
         redirectToNewTab,
         handleCouncilChange,
         convertToOrdinal,
@@ -214,6 +239,7 @@ export const useCommon = () => {
         jsonToList,
         getStatusSeverity,
         formatDate,
-        formatTime
+        formatTime,
+        getMyLocation
     }
 }

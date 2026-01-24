@@ -6,7 +6,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import { router } from '@inertiajs/vue3';
 
 defineProps({
-    counts: Object,
+
 });
 
 </script>
@@ -54,7 +54,7 @@ defineProps({
                     <div class="flex items-start justify-between">
                         <div>
                             <p class="text-xs text-blue-700 dark:text-blue-400 font-semibold mb-0.5">Completed Rides</p>
-                            <p class="text-sm font-bold text-blue-900 dark:text-blue-100">{{ counts.completed }}</p>
+                            <p class="text-sm font-bold text-blue-900 dark:text-blue-100">123</p>
                             <p class="text-xs text-blue-600 dark:text-blue-300 mt-0.5">Great performance!</p>
                         </div>
                         <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm">
@@ -82,7 +82,7 @@ defineProps({
                     <div class="flex items-start justify-between">
                         <div>
                             <p class="text-xs text-purple-700 dark:text-purple-400 font-semibold mb-0.5">Active Rides</p>
-                            <p class="text-sm font-bold text-purple-900 dark:text-purple-100">{{ counts.in_progress }}</p>
+                            <p class="text-sm font-bold text-purple-900 dark:text-purple-100">123</p>
                             <p class="text-xs text-purple-600 dark:text-purple-300 mt-0.5">Currently delivering</p>
                         </div>
                         <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm animate-pulse">
@@ -106,7 +106,7 @@ defineProps({
                                     <i class="ri-file-list-3-line"></i>
                                 </div>
                                 <span class="font-semibold text-emerald-900 dark:text-emerald-100 text-xs">Available Jobs</span>
-                                <span class="ml-auto bg-emerald-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold">{{ counts.pending }}</span>
+                                <span class="ml-auto bg-emerald-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold">123</span>
                             </div>
 
                             <p class="text-zinc-700 dark:text-zinc-300 mb-1.5 text-xs leading-tight">
@@ -129,7 +129,7 @@ defineProps({
                                     <i class="ri-map-pin-line"></i>
                                 </div>
                                 <span class="font-semibold text-purple-900 dark:text-purple-100 text-xs">In Progress</span>
-                                <span class="ml-auto bg-purple-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold">{{ counts.in_progress }}</span>
+                                <span class="ml-auto bg-purple-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold">123</span>
                             </div>
 
                             <p class="text-zinc-700 dark:text-zinc-300 mb-1.5 text-xs leading-tight">
@@ -152,7 +152,7 @@ defineProps({
                                     <i class="ri-check-double-line"></i>
                                 </div>
                                 <span class="font-semibold text-blue-900 dark:text-blue-100 text-xs">Completed</span>
-                                <span class="ml-auto bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold">{{ counts.completed }}</span>
+                                <span class="ml-auto bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold">123</span>
                             </div>
 
                             <p class="text-zinc-700 dark:text-zinc-300 mb-1.5 text-xs leading-tight">
@@ -190,18 +190,18 @@ defineProps({
             </div>
 
             <!-- Ride Status Summary -->
-            <div class="mb-4">
+            <!-- <div class="mb-4">
                 <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">Ride Overview</h3>
                 <div class="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 p-3">
                     <div class="space-y-2">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
                                 <div class="w-6 h-6 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center mr-2">
-                                    <i class="ri-time-line text-yellow-600 dark:text-yellow-400 text-xs"></i>
+                                    <i class="ri-map-pin-time-line text-yellow-600 dark:text-yellow-400 text-xs"></i>
                                 </div>
-                                <span class="text-xs font-medium text-zinc-900 dark:text-zinc-100">Pending Acceptance</span>
+                                <span class="text-xs font-medium text-zinc-900 dark:text-zinc-100">Open</span>
                             </div>
-                            <span class="text-sm font-bold text-yellow-600 dark:text-yellow-400">{{ counts.pending }}</span>
+                            <span class="text-sm font-bold text-yellow-600 dark:text-yellow-400">123</span>
                         </div>
 
                         <div class="flex items-center justify-between">
@@ -211,7 +211,7 @@ defineProps({
                                 </div>
                                 <span class="text-xs font-medium text-zinc-900 dark:text-zinc-100">Ready to Pickup</span>
                             </div>
-                            <span class="text-sm font-bold text-blue-600 dark:text-blue-400">{{ counts.accepted }}</span>
+                            <span class="text-sm font-bold text-blue-600 dark:text-blue-400">123</span>
                         </div>
 
                         <div class="flex items-center justify-between">
@@ -221,7 +221,7 @@ defineProps({
                                 </div>
                                 <span class="text-xs font-medium text-zinc-900 dark:text-zinc-100">Currently Delivering</span>
                             </div>
-                            <span class="text-sm font-bold text-purple-600 dark:text-purple-400">{{ counts.in_progress }}</span>
+                            <span class="text-sm font-bold text-purple-600 dark:text-purple-400">123</span>
                         </div>
 
                         <div class="flex items-center justify-between">
@@ -231,11 +231,13 @@ defineProps({
                                 </div>
                                 <span class="text-xs font-medium text-zinc-900 dark:text-zinc-100">Completed Today</span>
                             </div>
-                            <span class="text-sm font-bold text-green-600 dark:text-green-400">{{ counts.completed }}</span>
+                            <span class="text-sm font-bold text-green-600 dark:text-green-400">123</span>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
+
+
         </div>
     </AuthenticatedLayout>
 </template>

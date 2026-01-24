@@ -3,51 +3,34 @@
 import { Button } from 'primevue';
 import LocationMapModal from '@/Components/LocationMapModal.vue';
 import { ref, watch } from 'vue';
+import { useCommon } from '@/Composables/common';
 
 defineProps({
     pasuyo: Object,
 });
 
+const { getMyLocation } = useCommon();
+
 const isShowModal = ref(false);
 
 const myLocation = ref(null);
 
-function getLocation() {
-
-    console.log('I am being called.');
-
-
-    if (navigator.geolocation) {
-        // Geolocation is supported, proceed to get position
-        navigator.geolocation.getCurrentPosition((position) => {
-            myLocation.value = {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-            };
-        }, (error) => {
-            console.error("Error getting location: ", error);
-            alert("Unable to retrieve your location.");
-        });
-    } else {
-        // Geolocation is not supported
-        alert("Geolocation is not supported by this browser.");
+const pickUpLocation  = async () => {
+    try {
+        myLocation.value = await getMyLocation();
+        isShowModal.value = true;
+        console.log('Location:', myLocation.value);
+    } catch (error) {
+        console.error('Failed to get location:', error);
+        alert('Unable to retrieve your location. Make sure location permissions are enabled.');
     }
 }
-
-watch(isShowModal, (isShowModal) => {
-    if (isShowModal) {
-        getLocation();
-
-        console.log(myLocation.value);
-
-    }
-});
 
 </script>
 
 <template>
     <Button
-        @click="isShowModal = true"
+        @click="pickUpLocation"
         label="View on Map"
         severity="info"
         size="small"
@@ -55,11 +38,13 @@ watch(isShowModal, (isShowModal) => {
     />
     <LocationMapModal
         :coordinates="[
-            pasuyo.location_coordinates
+            pasuyo.location_coordinates,
+            myLocation
         ]"
         :show="isShowModal"
         :labels="[
-            'Pasuyo Location'
+            'Pasuyo Location',
+            'My Location'
         ]"
         @close="isShowModal = false"
     />

@@ -13,41 +13,10 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $pendingCount = (Pasuyo::where('user_id', auth()->id())
-                              ->where('status', 'pending')
-                              ->count()) +
-                        (PickAndDrop::where('user_id', auth()->id())
-                                    ->where('status', 'pending')
-                                    ->count());
-
-        $acceptedCount = (Pasuyo::where('user_id', auth()->id())
-                               ->where('status', 'accepted')
-                               ->count()) +
-                         (PickAndDrop::where('user_id', auth()->id())
-                                     ->where('status', 'accepted')
-                                     ->count());
-
-        $inProgressCount = (Pasuyo::where('user_id', auth()->id())
-                                 ->where('status', 'in_progress')
-                                 ->count()) +
-                           (PickAndDrop::where('user_id', auth()->id())
-                                       ->where('status', 'in_progress')
-                                       ->count());
-
-        $completedCount = (Pasuyo::where('user_id', auth()->id())
-                                 ->where('status', 'completed')
-                                 ->count()) +
-                          (PickAndDrop::where('user_id', auth()->id())
-                                      ->where('status', 'completed')
-                                      ->count());
+        
 
         return inertia('Dashboard', [
-            'counts' => [
-                'pending' => $pendingCount,
-                'accepted' => $acceptedCount,
-                'in_progress' => $inProgressCount,
-                'completed' => $completedCount,
-            ]
+
         ]);
     }
 
