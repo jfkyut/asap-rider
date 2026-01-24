@@ -16,11 +16,11 @@ const items = [
         icon: 'ri-search-line',
         route: '/find-deliveries',
     },
-    // {
-    //     label: 'Transactions',
-    //     icon: 'ri-exchange-box-line',
-    //     route: '/transactions',
-    // },
+    {
+        label: 'Deliveries',
+        icon: 'ri-exchange-box-line',
+        route: '/deliveries',
+    },
     // {
     //     label: 'Cart',
     //     icon: 'ri-shopping-cart-line',

@@ -1,71 +1,33 @@
 <script setup>
-import { computed, toRefs } from 'vue';
+
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { Button } from 'primevue';
 import { Head } from '@inertiajs/vue3';
-import {
-    Button,
-    Tag,
-    Tab,
-    TabList,
-    Tabs,
-    TabPanels,
-    TabPanel,
-    InputText
 
-} from 'primevue';
-import PasuyoTab from '../User/transaction-partials/PasuyoTab.vue';
-import PickAndDropTab from '../User/transaction-partials/PickAndDropTab.vue';
-
-const props = defineProps({
-    jobs: Object
+defineProps({
+    deliveries: Object
 });
-
-const { jobs } = toRefs(props);
-
-const pasuyos = computed(() => jobs.value?.pasuyos || []);
-const pickAndDrops = computed(() => jobs.value?.pick_and_drops || []);
-
 
 </script>
 
 <template>
     <AuthenticatedLayout>
-        <Head title="Find Deliveries" />
+        <Head title="Delivery" />
 
         <template #header>
-            <h2>Find Deliveries</h2>
+            <h2>Delivery</h2>
         </template>
 
-        <div>
-            <div class="max-w-6xl mx-auto sm:px-0">
-
-                <!-- Tabs Navigation -->
-                <Tabs value="1" class="w-full">
-                    <div class="sticky top-10 z-20">
-                        <TabList class="flex gap-4 border-b border-zinc-200 dark:border-zinc-800">
-                            <Tab value="1" class="w-[50%] bg-red-500">
-                                📦 Pasuyos
-                                <span class="ml-2 text-xs bg-zinc-200 dark:bg-zinc-700 rounded-full px-2 py-0.5">{{ pasuyos.length }}</span>
-                            </Tab>
-                            <Tab value="2" class="w-[50%]">
-                                🚗 Pick & Drop
-                                <span class="ml-2 text-xs bg-zinc-200 dark:bg-zinc-700 rounded-full px-2 py-0.5">{{ pickAndDrops.length }}</span>
-                            </Tab>
-                        </TabList>
-                    </div>
-
-                    <TabPanels >
-                        <TabPanel value="1">
-                            <!-- Pasuyos Tab -->
-                            <PasuyoTab :pasuyos="pasuyos" />
-                        </TabPanel>
-                        <TabPanel value="2">
-                            <!-- Pick & Drop Tab -->
-                            <PickAndDropTab :pick-and-drops="pickAndDrops" />
-                        </TabPanel>
-                    </TabPanels>
-                </Tabs>
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-zinc-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-zinc-900 dark:text-zinc-100">
+                    Delivery Page
+                </div>
             </div>
+        </div>
+
+        <div class="whitespace-pre-wrap">
+            {{ deliveries?.data }}
         </div>
     </AuthenticatedLayout>
 </template>
