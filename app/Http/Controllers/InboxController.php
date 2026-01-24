@@ -19,7 +19,8 @@ class InboxController extends Controller
             ->map(function ($message) {
                 return [
                     'id' => $message->id,
-                    'sender' => $message->sender->name,
+                    'sender' => $message->sender->name ?? 'System',
+                    'body' => $message->body,
                     'preview' => $message->preview,
                     'timestamp' => $message->getFormattedTimestamp(),
                     'unread' => !$message->is_read,

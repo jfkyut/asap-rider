@@ -53,7 +53,7 @@ const getTypeLabel = (type) => {
                         <h2 class="text-lg font-bold text-zinc-900 dark:text-white">{{ message.sender }}</h2>
                         <p class="text-xs text-zinc-500 dark:text-zinc-400">{{ message.timestamp }}</p>
                     </div>
-                    <button 
+                    <button
                         @click="$emit('close')"
                         class="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
                     >
@@ -80,22 +80,22 @@ const getTypeLabel = (type) => {
                 <!-- Message Body -->
                 <div class="mb-6 p-4 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
                     <p class="text-sm text-zinc-900 dark:text-white leading-relaxed whitespace-pre-wrap">
-                        {{ message.body || message.preview }}
+                        {{ message?.body || message?.preview }}
                     </p>
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="flex gap-3 justify-end">
-                    <Button 
+                    <Button
                         v-if="message.unread"
-                        label="Mark as Read" 
+                        label="Mark as Read"
                         severity="info"
                         size="small"
                         outlined
                         @click="$emit('markAsRead', message.id)"
                     />
-                    <Button 
-                        label="Close" 
+                    <Button
+                        label="Close"
                         severity="secondary"
                         size="small"
                         @click="$emit('close')"

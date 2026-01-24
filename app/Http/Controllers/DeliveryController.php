@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Message\Message;
 use Illuminate\Http\Request;
 use App\Models\Pasuyo\Pasuyo;
 use App\Models\Delivery\Delivery;
@@ -59,7 +60,53 @@ class DeliveryController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        $delivery = Delivery::create([
+            'type' => $request->input('type'),
+            'pasuyo_id' => $request->input('pasuyo_id'),
+            'pick_and_drop_id' => $request->input('pick_and_drop_id'),
+            'status' => 'accepted',
+            'user_id' => $request->user()->id,
+        ]);
+
+        if ($request->input('type') === 'pasuyo') {
+            $pasuyo = Pasuyo::find($request->input('pasuyo_id'));
+            $pasuyo->status = 'in_progress';
+            $pasuyo->save();
+
+            Message::create([
+                'sender_id' => null,
+                'body' => 'Your pasuyo id: ' . $pasuyo->id . ' has been accepted for delivery.',
+                'preview' => 'Your pasuyo id: ' . $pasuyo->id . ' has been accepted for delivery.',
+                'type' => 'system',
+                'is_read' => false,
+                'user_id' => $pasuyo->user_id,
+            ]);
+
+        } elseif ($request->input('type') === 'pick_and_drop') {
+            $pickAndDrop = PickAndDrop::find($request->input('pick_and_drop_id'));
+            $pickAndDrop->status = 'in_progress';
+            $pickAndDrop->save();
+
+            Message::create([
+                'sender_id' => null,
+                'body' => 'Your pick and drop id: ' . $pickAndDrop->id . ' has been accepted for delivery.',
+                'preview' => 'Your pick and drop id: ' . $pickAndDrop->id . ' has been accepted for delivery.',
+                'type' => 'system',
+                'is_read' => false,
+                'user_id' => $pickAndDrop->user_id,
+            ]);
+        }
+
+        Message::create([
+            'sender_id' => null,
+            'body' => 'You accepted a delivery id: ' . $delivery->id,
+            'preview' => 'You accepted a delivery id: ' . $delivery->id,
+            'type' => 'system',
+            'is_read' => false,
+            'user_id' => $request->user()->id,
+        ]);
+
+        return back();
     }
 
     /**

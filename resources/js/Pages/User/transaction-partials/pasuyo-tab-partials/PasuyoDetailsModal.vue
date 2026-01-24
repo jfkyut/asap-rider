@@ -6,6 +6,7 @@ import { useTransactions } from '@/Composables/transactions';
 import { Button, Tag } from 'primevue';
 import { ref } from 'vue';
 import LocationModal from './LocationModal.vue';
+import ConfirmDeliveryModal from '@/Components/ConfirmDeliveryModal.vue';
 
 defineProps({
     pasuyo: Object,
@@ -110,6 +111,11 @@ const { getStatusSeverity, formatDate } = useTransactions();
                         <p class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 uppercase tracking-wide mb-1">Created</p>
                         <p class="text-sm text-zinc-900 dark:text-white">{{ formatDate(pasuyo.created_at) }}</p>
                     </div>
+                </div>
+            </template>
+            <template #footer>
+                <div class="flex justify-end items-center">
+                    <ConfirmDeliveryModal :pasuyo="pasuyo" />
                 </div>
             </template>
         </Container>

@@ -17,11 +17,10 @@ return new class extends Migration
             $table->foreignId('pasuyo_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('pick_and_drop_id')->nullable()->constrained()->cascadeOnDelete();
             $table->enum('status', [
-                'pending',
                 'accepted',
                 'in_progress',
                 'completed'
-            ])->default('pending');
+            ])->default('accepted');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

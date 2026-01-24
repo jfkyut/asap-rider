@@ -15,7 +15,7 @@ defineProps({
 });
 
 const isShowMessageModal = ref(false);
-const isShowUnreadMessagesModal = ref(false);
+const selectedMessage = ref(null);
 const toast = useToast();
 
 const getTypeColor = (type) => {
@@ -40,7 +40,7 @@ const updateMessageAsRead = (messageId) => {
 
     if (!messageId) return;
 
-    router.put(route('inbox.mark-as-read', { 
+    router.put(route('inbox.mark-as-read', {
         message: messageId,
         onSuccess: () => {
             toast.success('Message marked as read');
@@ -68,9 +68,9 @@ const updateMessageAsRead = (messageId) => {
                     <InputGroupAddon>
                         <i class="ri-search-line text-zinc-400"></i>
                     </InputGroupAddon>
-                    <InputText 
-                        v-model="searchQuery" 
-                        placeholder="Search messages..." 
+                    <InputText
+                        v-model="searchQuery"
+                        placeholder="Search messages..."
                         class="bg-zinc-100 dark:bg-zinc-800 border-none rounded-lg text-sm"
                     />
                 </InputGroup>
@@ -79,75 +79,58 @@ const updateMessageAsRead = (messageId) => {
             <!-- Messages List -->
             <div v-if="messages.length > 0" class="space-y-2">
                 <!-- Unread Messages Section -->
-                <div @click="isShowMessageModal = true" v-if="messages.some(m => m.unread)" class="mb-4">
+                <div v-if="messages.some(m => m.unread)" class="mb-4">
                     <h3 class="text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-2 px-2">
                         <Badge value="New" severity="info" class="mr-2"></Badge>
                         Unread
                     </h3>
                     <div class="space-y-2">
-                        <div 
-                            @click="isShowUnreadMessagesModal = true"
-                            v-for="message in messages.filter(m => m.unread)" 
+                        <div
+                            @click="selectedMessage = message; isShowMessageModal = true"
+                            v-for="message in messages.filter(m => m.unread)"
                             :key="message.id"
                             class="bg-white dark:bg-zinc-800 rounded-lg p-3 border-l-4 border-teal-500 cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors"
                         >
                             <div class="flex-1 min-w-0">
                                     <div class="flex items-center justify-between gap-2 mb-1">
-                                        <p class="font-semibold text-sm truncate">{{ message.sender }}</p>
+                                        <p class="font-semibold text-sm">{{ message?.sender }}</p>
                                         <span class="text-xs text-zinc-500 flex-shrink-0">{{ message.timestamp }}</span>
                                     </div>
-                                    <p class="text-xs text-zinc-600 dark:text-zinc-400 truncate mb-2">{{ message?.body }}</p>
+                                    <p class="text-xs text-zinc-600 dark:text-zinc-400 mb-2">{{ message?.body }}</p>
                                     <div class="flex items-center">
                                         <span :class="['text-xs px-2 py-1 rounded-full flex items-center gap-1', getTypeColor(message.type)]">
                                             <i :class="getTypeIcon(message.type)"></i>
-                                            {{ message.type === 'pasuyo' ? 'Pasuyo' : message.type === 'pickup' ? 'Pick & Drop' : 'Support' }}
+                                            {{ message.type === 'pasuyo' ? 'Pasuyo' : message.type === 'pickup' ? 'Pick & Drop' : 'System' }}
                                         </span>
                                     </div>
-
-                                <!-- Unread Indicator -->
-                                <!-- <div class="flex-shrink-0 w-2 h-2 rounded-full bg-teal-500"></div> -->
                             </div>
-
-                            <MessageModal 
-                                :show="isShowUnreadMessagesModal" 
-                                @close="isShowUnreadMessagesModal = false"
-                                @mark-as-read="updateMessageAsRead(message?.id)"
-                                :message="message"
-                            />
                         </div>
                     </div>
-
-                    
                 </div>
 
                 <!-- Read Messages Section -->
                 <div v-if="messages.some(m => !m.unread)">
                     <h3 class="text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-2 px-2">Earlier</h3>
                     <div class="space-y-2">
-                        <div 
-                            @click="isShowMessageModal = true"
-                            v-for="message in messages.filter(m => !m.unread)" 
+                        <div
+                            @click="selectedMessage = message; isShowMessageModal = true"
+                            v-for="message in messages.filter(m => !m.unread)"
                             :key="message.id"
                             class="bg-white dark:bg-zinc-800 rounded-lg p-3 cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors"
                         >
                             <div class="flex-1 min-w-0">
                                     <div class="flex items-center justify-between gap-2 mb-1">
                                         <p class="font-semibold text-sm text-zinc-700 dark:text-zinc-300 truncate">{{ message.sender }}</p>
-                                        <span class="text-xs text-zinc-400 flex-shrink-0">{{ message.timestamp }}</span>
+                                        <span class="text-xs text-zinc-400 flex-shrink-0">{{ message?.timestamp }}</span>
                                     </div>
-                                    <p class="text-xs text-zinc-500 dark:text-zinc-400 truncate mb-2">{{ message.preview }}</p>
+                                    <p class="text-xs text-zinc-500 dark:text-zinc-400 truncate mb-2">{{ message?.body }}</p>
                                     <div class="flex items-center">
                                         <span :class="['text-xs px-2 py-1 rounded-full flex items-center gap-1', getTypeColor(message.type)]">
                                             <i :class="getTypeIcon(message.type)"></i>
-                                            {{ message.type === 'pasuyo' ? 'Pasuyo' : message.type === 'pickup' ? 'Pick & Drop' : 'Support' }}
+                                            {{ message.type === 'pasuyo' ? 'Pasuyo' : message.type === 'pickup' ? 'Pick & Drop' : 'System' }}
                                         </span>
                                     </div>
                             </div>
-                            <MessageModal 
-                                :show="isShowMessageModal" 
-                                @close="isShowMessageModal = false"
-                                :message="message"
-                            />
                         </div>
                     </div>
                 </div>
@@ -159,6 +142,14 @@ const updateMessageAsRead = (messageId) => {
                 <p class="text-sm font-semibold text-zinc-600 dark:text-zinc-400 mb-1">No messages yet</p>
                 <p class="text-xs text-zinc-500 dark:text-zinc-500">Your inbox will appear here</p>
             </div>
+
+            <!-- Single Message Modal -->
+            <MessageModal
+                :show="isShowMessageModal"
+                @close="isShowMessageModal = false; selectedMessage = null"
+                @mark-as-read="updateMessageAsRead(selectedMessage?.id)"
+                :message="selectedMessage"
+            />
         </div>
     </AuthenticatedLayout>
 </template>

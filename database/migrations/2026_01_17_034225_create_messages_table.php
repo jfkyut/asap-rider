@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('sender_id')->nullable()->constrained('users')->nullOnDelete(); // who sent it
             $table->text('body'); // full message content
             $table->string('preview')->nullable(); // truncated preview
-            $table->enum('type', ['pasuyo', 'pickup', 'support'])->default('pasuyo');
+            $table->enum('type', ['pasuyo', 'pickup', 'system'])->default('pasuyo');
             $table->unsignedBigInteger('related_id')->nullable(); // Pasuyo/PickAndDrop ID
             $table->string('related_type')->nullable(); // 'App\Models\Pasuyo\Pasuyo' or 'App\Models\PickAndDrop\PickAndDrop'
             $table->boolean('is_read')->default(false);

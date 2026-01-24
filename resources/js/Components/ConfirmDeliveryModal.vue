@@ -3,14 +3,47 @@
 import { Button } from 'primevue';
 import Modal from './Modal.vue';
 import Container from './Container.vue';
-import { ref } from 'vue';
+import { ref, toRefs } from 'vue';
+import { useForm } from '@inertiajs/vue3';
+import { useToast } from 'vue-toastification';
 
-defineProps({
+const props = defineProps({
     pickAndDrop: Object,
     pasuyo: Object,
 })
 
+const { pickAndDrop, pasuyo } = toRefs(props);
+
 const isShowModal = ref(false);
+const toast = useToast();
+
+const form = ref(
+    useForm({
+        type: pickAndDrop.value ? 'pick_and_drop' : 'pasuyo',
+        pick_and_drop_id: null,
+        pasuyo_id: null,
+    })
+)
+
+const submit = () => {
+
+    if (pickAndDrop.value) {
+        form.value.pick_and_drop_id = pickAndDrop.value.id;
+    } else if (pasuyo.value) {
+        form.value.pasuyo_id = pasuyo.value.id;
+    }
+
+    form.value.post(route('delivery.store'), {
+        onSuccess: () => {
+            isShowModal.value = false;
+            toast.success('Delivery accepted successfully!');
+        },
+        onError: (errors) => {
+            toast.error('Failed to accept delivery. Please try again.');
+            console.error('Submission errors:', errors);
+        },
+    });
+}
 
 </script>
 
@@ -27,7 +60,7 @@ const isShowModal = ref(false);
     >
         <Container>
             <template #header>
-                <h3 class="text-lg font-semibold text-zinc-900 dark:text-white">Confirm Delivery</h3>
+                <h3 class="text-lg font-semibold text-zinc-900 dark:text-white">Accept Delivery</h3>
             </template>
 
             <template #body>
@@ -49,8 +82,8 @@ const isShowModal = ref(false);
                     >
                         <span>Cancel</span>
                     </Button>
-                    <form>
-                        <Button type="submit" severity="success">
+                    <form @submit.prevent="submit">
+                        <Button :loading="form.processing" type="submit" severity="success">
                             <span>Confirm</span>
                         </Button>
                     </form>
