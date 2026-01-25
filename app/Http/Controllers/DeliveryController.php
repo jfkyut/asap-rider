@@ -21,7 +21,12 @@ class DeliveryController extends Controller
             $deliveryQuery->where('user_id', $request->user()->id);
 
             if ($request->filled('status') && !empty($request->query('status'))) {
-                $deliveryQuery->where('status', $request->query('status'));
+                $status = $request->query('status');
+                if ($status === 'active') {
+                    $deliveryQuery->where('status', '!=', 'completed');
+                } else {
+                    $deliveryQuery->where('status', $status);
+                }
             }
         });
 
