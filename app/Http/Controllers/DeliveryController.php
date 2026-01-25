@@ -33,11 +33,24 @@ class DeliveryController extends Controller
         return inertia('Delivery/Delivery', [
             'deliveries' => $deliveryQuery->with([
                                                 'pasuyo.attachments',
-                                                'pasuyo.trackings',
-                                                'pickAndDrop.trackings'
+                                                'pasuyo',
+                                                'pickAndDrop',
+                                                'trackings',
                                             ])
                                             ->latest()
-                                            ->paginate(),
+                                            ->paginate(100)
+                                            ->through(function ($delivery) {
+                                                return [
+                                                    ...$delivery->toArray(),
+                                                    'trackings' => $delivery->trackings->map(function ($tracking) {
+                                                        return [
+                                                            ...$tracking->toArray(),
+                                                            'created_at' => $tracking->created_at->format('M d, Y H:i'),
+                                                            'updated_at' => $tracking->updated_at->format('M d, Y H:i'),
+                                                        ];
+                                                    })->toArray(),
+                                                ];
+                                            }),
         ]);
     }
 
@@ -133,9 +146,55 @@ class DeliveryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Delivery $delivery)
     {
-        //
+        $delivery->update([
+            'status' => $request->input('status'),
+        ]);
+
+        Message::create([
+            'sender_id' => null,
+            'body' => 'You updated delivery id: ' . $delivery->id . ' to status: ' . $delivery->status,
+            'preview' => 'You updated delivery id: ' . $delivery->id . ' to status: ' . $delivery->status,
+            'type' => 'system',
+            'is_read' => false,
+            'user_id' => $request->user()->id,
+        ]);
+
+        $delivery->trackings()->create([
+            'status_update' => $delivery->status,
+        ]);
+
+        if ($delivery->type === 'pasuyo') {
+            $pasuyo = $delivery->pasuyo;
+            $pasuyo->status = $delivery->status;
+            $pasuyo->save();
+
+            Message::create([
+                'sender_id' => null,
+                'body' => 'Your pasuyo id: ' . $pasuyo->id . ' delivery status has been updated to: ' . $pasuyo->status,
+                'preview' => 'Your pasuyo id: ' . $pasuyo->id . ' delivery status has been updated to: ' . $pasuyo->status,
+                'type' => 'system',
+                'is_read' => false,
+                'user_id' => $pasuyo->user_id,
+            ]);
+
+        } elseif ($delivery->type === 'pick_and_drop') {
+            $pickAndDrop = $delivery->pickAndDrop;
+            $pickAndDrop->status = $delivery->status;
+            $pickAndDrop->save();
+
+            Message::create([
+                'sender_id' => null,
+                'body' => 'Your pick and drop id: ' . $pickAndDrop->id . ' delivery status has been updated to: ' . $pickAndDrop->status,
+                'preview' => 'Your pick and drop id: ' . $pickAndDrop->id . ' delivery status has been updated to: ' . $pickAndDrop->status,
+                'type' => 'system',
+                'is_read' => false,
+                'user_id' => $pickAndDrop->user_id,
+            ]);
+        }
+
+        return back();
     }
 
     /**

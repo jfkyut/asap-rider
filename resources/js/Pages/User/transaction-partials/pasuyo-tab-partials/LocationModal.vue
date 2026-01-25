@@ -31,9 +31,10 @@ const pickUpLocation  = async () => {
 <template>
     <Button
         @click="pickUpLocation"
-        label="View on Map"
+        label="Map"
         severity="info"
         size="small"
+        icon="ri-map-pin-line"
         variant="outlined"
     />
     <LocationMapModal

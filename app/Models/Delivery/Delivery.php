@@ -28,4 +28,9 @@ class Delivery extends Model
     {
         return $this->belongsTo(\App\Models\User::class);
     }
+
+    public function trackings()
+    {
+        return $this->hasMany(DeliveryTracking::class);
+    }
 }

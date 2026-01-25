@@ -3,6 +3,8 @@
 import LocationModal from '@/Pages/User/transaction-partials/pasuyo-tab-partials/LocationModal.vue';
 import LocationRouteModal from '@/Pages/User/transaction-partials/pickanddrop-tab-partials/pick-and-drop-details-modal-partials/LocationRouteModal.vue';
 import { Tag, Button } from 'primevue';
+import UpdateDeliveryModal from './delivery-card-partials/UpdateDeliveryModal.vue';
+import TrackingModal from './delivery-card-partials/TrackingModal.vue';
 
 defineProps({
     deliveryList: {
@@ -151,12 +153,9 @@ const getStatusColor = (status) => {
                     v-if="delivery?.type === 'pasuyo'"
                     :pasuyo="delivery?.pasuyo"
                 />
-                <Button
-                    label="Complete"
-                    severity="success"
-                    size="small"
-                    class="flex-1"
-                />
+                <TrackingModal :delivery="delivery" />
+                <UpdateDeliveryModal :delivery="delivery" />
+
             </div>
         </div>
     </div>
