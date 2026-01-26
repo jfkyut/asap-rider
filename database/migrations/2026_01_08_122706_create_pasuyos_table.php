@@ -23,8 +23,9 @@ return new class extends Migration
             $table->enum('status', [
                 'pending',
                 'accepted',
-                'in_progress', 
-                'completed'
+                'in_progress',
+                'completed',
+                'cancelled'
             ])->default('pending');
             $table->string('payment_method')->nullable();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();

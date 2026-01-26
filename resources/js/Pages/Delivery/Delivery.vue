@@ -28,6 +28,7 @@ const tabs = [
     { label: 'All', value: 'all', status: null },
     { label: 'Active', value: 'active', status: 'active' },
     { label: 'Completed', value: 'completed', status: 'completed' },
+    { label: 'Cancelled', value: 'cancelled', status: 'cancelled' }
 ];
 
 // Get current status from query parameter
@@ -57,8 +58,8 @@ const handleTabChange = (tabValue) => {
         <Tabs :value="currentTab" @update:value="handleTabChange">
             <TabList>
                 <Tab v-for="tab in tabs" :key="tab.value" :value="tab.value" class="flex-1">
-                    {{ tab.label }}
-                </Tab>
+                        {{ tab.label }}
+                    </Tab>
             </TabList>
             <TabPanels>
                 <TabPanel v-for="tab in tabs" :key="tab.value" :value="tab.value">

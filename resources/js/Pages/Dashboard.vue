@@ -73,19 +73,19 @@ const actionButtons = computed(() => [
 // Ride overview data
 const rideOverview = computed(() => [
     {
-        id: 'open',
-        label: 'Open',
-        icon: 'ri-map-pin-time-line',
+        id: 'accepted',
+        label: 'Accepted Deliveries',
+        icon: 'ri-thumb-up-line',
         color: 'yellow',
         count: props.stats.pending || 0
     },
-    {
-        id: 'ready',
-        label: 'Ready to Pickup',
-        icon: 'ri-check-line',
-        color: 'blue',
-        count: props.stats.accepted || 0
-    },
+    // {
+    //     id: 'ready',
+    //     label: 'Ready to Pickup',
+    //     icon: 'ri-check-line',
+    //     color: 'blue',
+    //     count: props.stats.accepted || 0
+    // },
     {
         id: 'delivering',
         label: 'Currently Delivering',
@@ -96,10 +96,31 @@ const rideOverview = computed(() => [
     },
     {
         id: 'completed',
-        label: 'Completed Today',
+        label: 'Completed Deliveries',
         icon: 'ri-check-double-line',
         color: 'green',
         count: props.stats.completed || 0
+    },
+    {
+        id: 'cancelled',
+        label: 'Cancelled Deliveries',
+        icon: 'ri-close-circle-line',
+        color: 'red',
+        count: props.stats.cancelled || 0
+    },
+    {
+        id: 'total',
+        label: 'Total Deliveries',
+        icon: 'ri-file-list-3-line',
+        color: 'emerald',
+        count: props.stats.total || 0
+    },
+    {
+        id: 'success_rate',
+        label: 'Success Rate',
+        icon: 'ri-money-dollar-circle-line',
+        color: 'green',
+        count: props.stats.success_rate + '%' || 0 + '%'
     }
 ]);
 
@@ -110,7 +131,7 @@ const getColorClasses = (color, type = 'bg') => {
         purple: { bg: 'bg-purple-100 dark:bg-purple-900/30', text: 'text-purple-600 dark:text-purple-400', border: 'border-purple-300 dark:border-purple-700', btn: 'bg-purple-500', lightBg: 'from-purple-50 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/50', btnBorder: 'border-purple-400 dark:border-purple-600', btnText: 'text-purple-900 dark:text-purple-100', overlay: 'bg-purple-200 dark:bg-purple-700' },
         yellow: { text: 'text-yellow-600 dark:text-yellow-400', color: 'text-yellow-600 dark:text-yellow-400' },
         green: { text: 'text-green-600 dark:text-green-400', color: 'text-green-600 dark:text-green-400' },
-        orange: { text: 'text-orange-600 dark:text-orange-400' }
+        red: { text: 'text-red-600 dark:text-red-400' }
     };
     return colors[color];
 };
@@ -125,7 +146,7 @@ const getColorClasses = (color, type = 'bg') => {
             Dashboard
         </template>
 
-        <div class="sm:p-6 max-w-7xl mx-auto px-2 py-2 sm:py-6">
+        <div class="sm:p-6 max-w-7xl mx-auto sm:py-6">
             <!-- Welcome Card with Profile -->
             <div class="border border-emerald-500 dark:border-emerald-800 p-2 rounded-lg flex justify-between items-center mb-4 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20">
                 <div>
@@ -140,7 +161,7 @@ const getColorClasses = (color, type = 'bg') => {
             </div>
 
             <!-- Quick Stats Grid -->
-            <div class="grid grid-cols-2 gap-1 mb-4">
+            <!-- <div class="grid grid-cols-2 gap-1 mb-4">
                 <div
                     v-for="stat in statCards"
                     :key="stat.id"
@@ -157,35 +178,112 @@ const getColorClasses = (color, type = 'bg') => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Action Buttons -->
             <div class="mb-4">
                 <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">Quick Actions</h3>
                 <div class="grid grid-cols-2 gap-1">
+                    <!-- Available -->
                     <div
-                        v-for="action in actionButtons"
-                        :key="action.id"
-                        @click="router.get(route(action.route))"
-                        :class="['group relative overflow-hidden rounded-lg border-2 p-3 hover:shadow-lg transition-all duration-300 cursor-pointer', getColorClasses(action.color).btnBorder, getColorClasses(action.color).lightBg]"
+                        @click="router.get(route('delivery.create'))"
+                        class="group relative overflow-hidden rounded-lg border-2 border-emerald-400 dark:border-emerald-600 p-3 hover:shadow-lg transition-all duration-300 cursor-pointer from-emerald-50 to-teal-100 dark:from-emerald-900/30 dark:to-teal-900/50"
                     >
-                        <div :class="['absolute top-0 right-0 w-12 h-12 rounded-full -mr-4 -mt-4 opacity-50 group-hover:opacity-75 transition-opacity', getColorClasses(action.color).overlay]"></div>
+                        <div class="absolute top-0 right-0 w-12 h-12 rounded-full -mr-4 -mt-4 opacity-50 group-hover:opacity-75 transition-opacity bg-emerald-200 dark:bg-emerald-700"></div>
 
                         <div class="relative z-10">
                             <div class="flex items-center mb-2">
-                                <div :class="['w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm mr-1.5', getColorClasses(action.color).btn]">
-                                    <i :class="action.icon"></i>
+                                <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm mr-1.5 bg-emerald-500">
+                                    <i class="ri-file-list-3-line"></i>
                                 </div>
-                                <span :class="['font-semibold text-xs', getColorClasses(action.color).btnText]">{{ action.label }}</span>
-                                <span :class="['ml-auto text-white text-xs px-1.5 py-0.5 rounded-full font-bold', getColorClasses(action.color).btn]">{{ action.count }}</span>
+                                <span class="font-semibold text-xs text-emerald-900 dark:text-emerald-100">Available</span>
+                                <!-- <span class="ml-auto text-white text-xs px-1.5 py-0.5 rounded-full font-bold bg-emerald-500">{{ props.stats.pending || 0 }}</span> -->
                             </div>
 
                             <p class="text-zinc-700 dark:text-zinc-300 mb-1.5 text-xs leading-tight">
-                                {{ action.description }}
+                                Available delivery requests
                             </p>
 
-                            <div :class="['flex items-center font-semibold text-xs hover:translate-x-1 transition-transform', getColorClasses(action.color).text]">
-                                {{ action.label === 'Available' ? 'See jobs' : action.label === 'In Progress' ? 'Track now' : 'View history' }} <i class="ri-arrow-right-s-line ml-1"></i>
+                            <div class="flex items-center font-semibold text-xs hover:translate-x-1 transition-transform text-emerald-600 dark:text-emerald-400">
+                                See jobs <i class="ri-arrow-right-s-line ml-1"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- In Progress -->
+                    <div
+                        @click="router.get(route('delivery.index', { status: 'active' }))"
+                        class="group relative overflow-hidden rounded-lg border-2 border-purple-400 dark:border-purple-600 p-3 hover:shadow-lg transition-all duration-300 cursor-pointer from-purple-50 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/50"
+                    >
+                        <div class="absolute top-0 right-0 w-12 h-12 rounded-full -mr-4 -mt-4 opacity-50 group-hover:opacity-75 transition-opacity bg-purple-200 dark:bg-purple-700"></div>
+
+                        <div class="relative z-10">
+                            <div class="flex items-center mb-2">
+                                <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm mr-1.5 bg-purple-500">
+                                    <i class="ri-map-pin-line"></i>
+                                </div>
+                                <span class="font-semibold text-xs text-purple-900 dark:text-purple-100">In Progress</span>
+                                <!-- <span class="ml-auto text-white text-xs px-1.5 py-0.5 rounded-full font-bold bg-purple-500">{{ props.stats.in_progress || 0 }}</span> -->
+                            </div>
+
+                            <p class="text-zinc-700 dark:text-zinc-300 mb-1.5 text-xs leading-tight">
+                                Track active deliveries
+                            </p>
+
+                            <div class="flex items-center font-semibold text-xs hover:translate-x-1 transition-transform text-purple-600 dark:text-purple-400">
+                                Track now <i class="ri-arrow-right-s-line ml-1"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Completed -->
+                    <div
+                        @click="router.get(route('delivery.index', { status: 'completed' }))"
+                        class="group relative overflow-hidden rounded-lg border-2 border-blue-400 dark:border-blue-600 p-3 hover:shadow-lg transition-all duration-300 cursor-pointer from-blue-50 to-cyan-100 dark:from-blue-900/30 dark:to-cyan-900/50"
+                    >
+                        <div class="absolute top-0 right-0 w-12 h-12 rounded-full -mr-4 -mt-4 opacity-50 group-hover:opacity-75 transition-opacity bg-blue-200 dark:bg-blue-700"></div>
+
+                        <div class="relative z-10">
+                            <div class="flex items-center mb-2">
+                                <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm mr-1.5 bg-blue-500">
+                                    <i class="ri-check-double-line"></i>
+                                </div>
+                                <span class="font-semibold text-xs text-blue-900 dark:text-blue-100">Completed</span>
+                                <!-- <span class="ml-auto text-white text-xs px-1.5 py-0.5 rounded-full font-bold bg-blue-500">{{ props.stats.completed || 0 }}</span> -->
+                            </div>
+
+                            <p class="text-zinc-700 dark:text-zinc-300 mb-1.5 text-xs leading-tight">
+                                View completed deliveries
+                            </p>
+
+                            <div class="flex items-center font-semibold text-xs hover:translate-x-1 transition-transform text-blue-600 dark:text-blue-400">
+                                View history <i class="ri-arrow-right-s-line ml-1"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- cancelled -->
+                    <div
+                        @click="router.get(route('delivery.index', { status: 'cancelled' }))"
+                        class="group relative overflow-hidden rounded-lg border-2 border-red-400 dark:border-red-600 p-3 hover:shadow-lg transition-all duration-300 cursor-pointer from-red-50 to-cyan-100 dark:from-red-900/30 dark:to-cyan-900/50"
+                    >
+                        <div class="absolute top-0 right-0 w-12 h-12 rounded-full -mr-4 -mt-4 opacity-50 group-hover:opacity-75 transition-opacity bg-red-200 dark:bg-red-700"></div>
+
+                        <div class="relative z-10">
+                            <div class="flex items-center mb-2">
+                                <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm mr-1.5 bg-red-500">
+                                    <i class="ri-close-circle-line"></i>
+                                </div>
+                                <span class="font-semibold text-xs text-red-900 dark:text-red-100">Cancelled</span>
+                                <!-- <span class="ml-auto text-white text-xs px-1.5 py-0.5 rounded-full font-bold bg-red-500">{{ props.stats.completed || 0 }}</span> -->
+                            </div>
+
+                            <p class="text-zinc-700 dark:text-zinc-300 mb-1.5 text-xs leading-tight">
+                                View cancelled deliveries
+                            </p>
+
+                            <div class="flex items-center font-semibold text-xs hover:translate-x-1 transition-transform text-red-600 dark:text-red-400">
+                                View history <i class="ri-arrow-right-s-line ml-1"></i>
                             </div>
                         </div>
                     </div>

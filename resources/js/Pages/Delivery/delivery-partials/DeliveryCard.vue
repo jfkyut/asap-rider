@@ -154,7 +154,10 @@ const getStatusColor = (status) => {
                     :pasuyo="delivery?.pasuyo"
                 />
                 <TrackingModal :delivery="delivery" />
-                <UpdateDeliveryModal :delivery="delivery" />
+                <UpdateDeliveryModal
+                    v-if="route().queryParams.status !== 'completed' && route().queryParams.status !== 'cancelled'"
+                    :delivery="delivery"
+                />
 
             </div>
         </div>

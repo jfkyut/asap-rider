@@ -11,12 +11,23 @@ class DashboardController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        
-
         return inertia('Dashboard', [
-
+            'stats' => [
+                'pending' => $request->user()->deliveries()->where('status', 'accepted')->count(),
+                'in_progress' => $request->user()->deliveries()->where('status', 'in_progress')->count(),
+                'completed' => $request->user()->deliveries()->where('status', 'completed')->count(),
+                'cancelled' => $request->user()->deliveries()->where('status', 'cancelled')->count(),
+                'total' => $request->user()->deliveries()->count(),
+                'success_rate' => $request->user()->deliveries()->count() > 0
+                    ? round(
+                        ($request->user()->deliveries()->where('status', 'completed')->count() /
+                        $request->user()->deliveries()->count()) * 100,
+                        2
+                    )
+                    : 0,
+            ],
         ]);
     }
 

@@ -23,7 +23,8 @@ class DeliveryController extends Controller
             if ($request->filled('status') && !empty($request->query('status'))) {
                 $status = $request->query('status');
                 if ($status === 'active') {
-                    $deliveryQuery->where('status', '!=', 'completed');
+                    $deliveryQuery->where('status', '!=', 'completed')
+                                  ->where('status', '!=', 'cancelled');
                 } else {
                     $deliveryQuery->where('status', $status);
                 }
@@ -86,9 +87,13 @@ class DeliveryController extends Controller
             'user_id' => $request->user()->id,
         ]);
 
+        $delivery->trackings()->create([
+            'status_update' => 'accepted',
+        ]);
+
         if ($request->input('type') === 'pasuyo') {
             $pasuyo = Pasuyo::find($request->input('pasuyo_id'));
-            $pasuyo->status = 'in_progress';
+            $pasuyo->status = $delivery->status;
             $pasuyo->save();
 
             Message::create([
@@ -102,7 +107,7 @@ class DeliveryController extends Controller
 
         } elseif ($request->input('type') === 'pick_and_drop') {
             $pickAndDrop = PickAndDrop::find($request->input('pick_and_drop_id'));
-            $pickAndDrop->status = 'in_progress';
+            $pickAndDrop->status = $delivery->status;
             $pickAndDrop->save();
 
             Message::create([

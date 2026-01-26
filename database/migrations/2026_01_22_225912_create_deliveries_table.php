@@ -19,7 +19,8 @@ return new class extends Migration
             $table->enum('status', [
                 'accepted',
                 'in_progress',
-                'completed'
+                'completed',
+                'cancelled'
             ])->default('accepted');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();

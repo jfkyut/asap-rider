@@ -83,6 +83,7 @@ watch(isShowModal, (isShowModal) => {
                                 { label: 'Accepted', value: 'accepted' },
                                 { label: 'In Progress', value: 'in_progress' },
                                 { label: 'Completed', value: 'completed' },
+                                { label: 'Cancelled', value: 'cancelled' }
                             ]"
                             option-label="label"
                             option-value="value"
