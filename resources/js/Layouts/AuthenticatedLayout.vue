@@ -64,7 +64,7 @@ const back = () => {
     <div :class="[
             !route().current().includes('dashboard') ? 'pt-16' : '',
             !hasPadding ? 'p-0' : 'p-2'
-        ]" class="bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 min-h-screen pb-24 text-xs">
+        ]" class="bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 min-h-screen pb-24 text-xs select-none">
         <!-- header -->
         <div v-if="!route().current().includes('dashboard')" class="bg-teal-600 text-white px-2 py-1 flex items-center justify-between shadow-sm fixed top-0 left-0 right-0 z-30">
             <div>
