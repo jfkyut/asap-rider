@@ -27,6 +27,8 @@ const vectorSource = ref(null);
 const visibleLabels = ref(new Set());
 const isLoadingRoute = ref(false);
 const routeCoordinates = ref([]);
+const routeDistance = ref(null);
+const routeDuration = ref(null);
 
 const OPEN_ROUTE_SERVICE_KEY = import.meta.env.VITE_OPEN_ROUTE_SERVICE_KEY || '';
 
@@ -65,8 +67,9 @@ watch(show, (show) => {
     if (show) {
         isLoadingRoute.value = true;
 
-        // If there are at least two coordinates, fetch route data
+        // If there are exactly two coordinates, fetch route data
         if (parsedCoordinates.value.length >= 2) {
+
             axios.post('https://api.openrouteservice.org/v2/directions/driving-car/geojson', {
                 coordinates: parsedCoordinates.value
             }, {
@@ -79,8 +82,14 @@ watch(show, (show) => {
                 // Extract route coordinates from the geometry
                 if (routeGeoJSON.features && routeGeoJSON.features.length > 0) {
                     const geometry = routeGeoJSON.features[0].geometry;
+                    const properties = routeGeoJSON.features[0].properties;
                     if (geometry.type === 'LineString') {
                         routeCoordinates.value = geometry.coordinates;
+                    }
+                    // Extract distance and duration from properties
+                    if (properties) {
+                        routeDistance.value = (properties.summary?.distance || 0) / 1000; // Convert to km
+                        routeDuration.value = Math.round((properties.summary?.duration || 0) / 60); // Convert to minutes
                     }
                 }
                 console.log(routeGeoJSON);
@@ -166,6 +175,20 @@ watch(show, (show) => {
                     <p class="text-xs font-semibold text-gray-800">
                         {{ labels[index] || `Location ${index + 1}` }}
                     </p>
+                </div>
+            </ol-overlay>
+
+            <!-- Distance Display -->
+            <ol-overlay
+                v-if="routeCoordinates.length > 0 && routeDistance"
+                :position="routeCoordinates[Math.floor(routeCoordinates.length / 2)]"
+                positioning="center-center"
+                :offset="[0, -50]"
+            >
+                <div
+                    class="bg-gray-700 text-white px-4 py-2 rounded-lg shadow-lg font-semibold text-sm whitespace-nowrap"
+                >
+                    <span>📍 {{ routeDistance.toFixed(2) }} km</span>
                 </div>
             </ol-overlay>
 
