@@ -24,7 +24,8 @@ class DeliveryController extends Controller
                 $status = $request->query('status');
                 if ($status === 'active') {
                     $deliveryQuery->where('status', '!=', 'completed')
-                                  ->where('status', '!=', 'cancelled');
+                                  ->where('status', '!=', 'cancelled')
+                                  ->where('status', '!=', 'to_pay');
                 } else {
                     $deliveryQuery->where('status', $status);
                 }
@@ -155,6 +156,9 @@ class DeliveryController extends Controller
     {
         $delivery->update([
             'status' => $request->input('status'),
+            'bill_amount' => $request->input('bill_amount'),
+            'distance_travelled' => $request->input('distance_travelled'),
+            'total_payment' => $request->input('total_payment'),
         ]);
 
         Message::create([

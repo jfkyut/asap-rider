@@ -1,6 +1,6 @@
 <script setup>
 
-import { Button, FloatLabel, Select } from 'primevue';
+import { Button, FloatLabel, Select, InputText } from 'primevue';
 import Modal from '@/Components/Modal.vue';
 import { ref, toRefs, watch } from 'vue';
 import Container from '@/Components/Container.vue';
@@ -17,9 +17,15 @@ const isShowModal = ref(false);
 const toast = useToast();
 const submitButtonRef = ref(null);
 
+const travelFee = ref(30);
+const travelPerKm = ref(15);
+
 const form = ref(
     useForm({
         status: null,
+        bill_amount: null,
+        distance_travelled: null,
+        total_payment: null,
     })
 )
 
@@ -42,9 +48,22 @@ watch(isShowModal, (isShowModal) => {
     if (isShowModal) {
         setTimeout(() => {
             form.value.status = delivery.value.status;
+            form.value.bill_amount = delivery.value.bill_amount;
+            form.value.distance_travelled = delivery.value.distance_travelled;
+            form.value.total_payment = delivery.value.total_payment;
         }, 300);
     }
 });
+
+watch(() => form.value, (form) => {
+    if (form.distance_travelled !== null && form.bill_amount !== null) {
+        const distanceInKm = form.distance_travelled / 1000;
+        const calculatedTotal = (parseFloat(form.bill_amount) + travelFee.value + (travelPerKm.value * distanceInKm)).toFixed(2);
+        form.total_payment = parseFloat(calculatedTotal);
+    } else {
+        form.total_payment = null;
+    }
+}, { deep: true });
 
 </script>
 
@@ -76,22 +95,56 @@ watch(isShowModal, (isShowModal) => {
             </template>
             <template #body>
                 <form @submit.prevent="submit(delivery)">
-                    <FloatLabel variant="on">
-                        <Select
-                            name="status"
-                            :options="[
-                                { label: 'Accepted', value: 'accepted' },
-                                { label: 'In Progress', value: 'in_progress' },
-                                { label: 'Completed', value: 'completed' },
-                                { label: 'Cancelled', value: 'cancelled' }
-                            ]"
-                            option-label="label"
-                            option-value="value"
-                            v-model="form.status"
-                            class="w-full"
-                        />
-                        <label for="status">Status</label>
-                    </FloatLabel>
+                    <div class="space-y-4">
+                        <FloatLabel variant="on">
+                            <Select
+                                name="status"
+                                :options="[
+                                    { label: 'Accepted', value: 'accepted' },
+                                    { label: 'In Progress', value: 'in_progress' },
+                                    { label: 'To Pay', value: 'to_pay' },
+                                    { label: 'Completed', value: 'completed' },
+                                    { label: 'Cancelled', value: 'cancelled' }
+                                ]"
+                                option-label="label"
+                                option-value="value"
+                                v-model="form.status"
+                                class="w-full"
+                            />
+                            <label for="status">Status</label>
+                        </FloatLabel>
+                        <FloatLabel variant="on">
+                            <InputText
+                                name="bill_amount "
+                                type="number"
+                                step="0.10"
+                                v-model="form.bill_amount"
+                                class="w-full"
+                            />
+                            <label for="bill_amount">Bill Amount (₱)</label>
+                        </FloatLabel>
+                        <FloatLabel variant="on">
+                            <InputText
+                                name="distance_travelled"
+                                type="number"
+                                step="0.01"
+                                v-model="form.distance_travelled"
+                                class="w-full"
+                            />
+                            <label for="distance_travelled">Distance Travelled (m)</label>
+                        </FloatLabel>
+                        <FloatLabel variant="on">
+                            <InputText
+                                name="total_payment"
+                                type="number"
+                                step="0.10"
+                                v-model="form.total_payment"
+                                class="w-full"
+
+                            />
+                            <label for="total_payment">Total Payment (₱)</label>
+                        </FloatLabel>
+                    </div>
                     <button type="submit" class="sr-only" ref="submitButtonRef"></button>
                 </form>
 

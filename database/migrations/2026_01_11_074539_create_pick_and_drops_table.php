@@ -28,6 +28,7 @@ return new class extends Migration
                 'pending',
                 'accepted',
                 'in_progress',
+                'to_pay',
                 'completed',
                 'cancelled'
             ])->default('pending');

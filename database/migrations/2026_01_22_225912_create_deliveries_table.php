@@ -19,9 +19,13 @@ return new class extends Migration
             $table->enum('status', [
                 'accepted',
                 'in_progress',
+                'to_pay',
                 'completed',
                 'cancelled'
             ])->default('accepted');
+            $table->decimal('bill_amount', 10, 2)->nullable();
+            $table->decimal('distance_travelled', 8, 2)->nullable();
+            $table->decimal('total_payment', 10, 2)->nullable();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

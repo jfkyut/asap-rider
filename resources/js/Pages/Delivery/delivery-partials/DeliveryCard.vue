@@ -137,8 +137,31 @@ const getStatusColor = (status) => {
                 <div class="flex items-center gap-2">
                     <i class="ri-wallet-3-line text-zinc-400 text-sm flex-shrink-0"></i>
                     <div>
-                        <p class="text-xs font-semibold text-zinc-600 dark:text-zinc-400">Payment</p>
+                        <p class="text-xs font-semibold text-zinc-600 dark:text-zinc-400">Payment Method</p>
                         <p class="text-xs text-zinc-900 dark:text-zinc-100">{{ getDeliveryData(delivery).payment_method }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Breakdown -->
+            <div class="p-3 border-t border-zinc-100 dark:border-zinc-700 bg-white dark:bg-zinc-800">
+                <p class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 mb-3">PAYMENT DETAILS</p>
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-zinc-600 dark:text-zinc-400">Bill Amount</span>
+                        <span class="text-xs font-medium text-zinc-900 dark:text-zinc-100">₱{{ delivery?.bill_amount ? parseFloat(delivery.bill_amount).toFixed(2) : '0.00' }}</span>
+                    </div>
+                    <div v-if="delivery?.distance_travelled" class="flex justify-between items-center">
+                        <span class="text-xs text-zinc-600 dark:text-zinc-400">Distance Travelled</span>
+                        <span class="text-xs font-medium text-zinc-900 dark:text-zinc-100">{{ (delivery.distance_travelled / 1000).toFixed(2) }} km</span>
+                    </div>
+                    <div v-if="delivery?.distance_travelled" class="flex justify-between items-center">
+                        <span class="text-xs text-zinc-600 dark:text-zinc-400">Travel Fee</span>
+                        <span class="text-xs font-medium text-zinc-900 dark:text-zinc-100">₱30.00 + ₱15.00/km</span>
+                    </div>
+                    <div class="pt-2 border-t border-zinc-200 dark:border-zinc-700 flex justify-between items-center">
+                        <span class="text-xs font-semibold text-zinc-900 dark:text-zinc-100">Total Payment</span>
+                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">₱{{ delivery?.total_payment ? parseFloat(delivery.total_payment).toFixed(2) : '0.00' }}</span>
                     </div>
                 </div>
             </div>

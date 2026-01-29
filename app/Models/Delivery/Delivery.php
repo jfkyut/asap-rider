@@ -11,6 +11,9 @@ class Delivery extends Model
         'pasuyo_id',
         'pick_and_drop_id',
         'status',
+        'bill_amount',
+        'distance_travelled',
+        'total_payment',
         'user_id',
     ];
 

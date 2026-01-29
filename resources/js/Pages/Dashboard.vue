@@ -236,6 +236,29 @@ const getColorClasses = (color, type = 'bg') => {
                         </div>
                     </div>
 
+                    <!-- to pay -->
+                    <div
+                        @click="router.get(route('delivery.index', { status: 'to_pay' }))"
+                        class="group relative overflow-hidden rounded-lg border-2 border-yellow-400 dark:border-yellow-600 p-3 hover:shadow-lg transition-all duration-300 cursor-pointer from-yellow-50 to-cyan-100 dark:from-yellow-900/30 dark:to-cyan-900/50"
+                    >
+                        <div class="absolute top-0 right-0 w-12 h-12 rounded-full -mr-4 -mt-4 opacity-50 group-hover:opacity-75 transition-opacity bg-yellow-200 dark:bg-yellow-700"></div>
+                        <div class="relative z-10">
+                            <div class="flex items-center mb-2">
+                                <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm mr-1.5 bg-yellow-500">
+                                    <i class="ri-money-dollar-circle-line"></i>
+                                </div>
+                                <span class="font-semibold text-xs text-yellow-900 dark:text-yellow-100">To Pay</span>
+                                <!-- <span class="ml-auto text-white text-xs px-1.5 py-0.5 rounded-full font-bold bg-yellow-500">{{ props.stats.to_pay || 0 }}</span> -->
+                            </div>
+                            <p class="text-zinc-700 dark:text-zinc-300 mb-1.5 text-xs leading-tight">
+                                View deliveries to pay
+                            </p>
+                            <div class="flex items-center font-semibold text-xs hover:translate-x-1 transition-transform text-yellow-600 dark:text-yellow-400">
+                                View now <i class="ri-arrow-right-s-line ml-1"></i>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Completed -->
                     <div
                         @click="router.get(route('delivery.index', { status: 'completed' }))"
