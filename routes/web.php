@@ -19,34 +19,43 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::middleware('subscriber')->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // pasuyo routes
-    Route::get('/pasuyo/create', [App\Http\Controllers\PasuyoController::class, 'create'])->name('pasuyo.create');
-    Route::post('/pasuyo/store', [App\Http\Controllers\PasuyoController::class, 'store'])->name('pasuyo.store');
+        // pasuyo routes
+        Route::get('/pasuyo/create', [App\Http\Controllers\PasuyoController::class, 'create'])->name('pasuyo.create');
+        Route::post('/pasuyo/store', [App\Http\Controllers\PasuyoController::class, 'store'])->name('pasuyo.store');
 
-    // pick and drop routes
-    Route::get('/pick-and-drop/create', [App\Http\Controllers\PickAndDropController::class, 'create'])->name('pick-and-drop.create');
-    Route::post('/pick-and-drop/store', [App\Http\Controllers\PickAndDropController::class, 'store'])->name('pick-and-drop.store');
+        // pick and drop routes
+        Route::get('/pick-and-drop/create', [App\Http\Controllers\PickAndDropController::class, 'create'])->name('pick-and-drop.create');
+        Route::post('/pick-and-drop/store', [App\Http\Controllers\PickAndDropController::class, 'store'])->name('pick-and-drop.store');
 
-    // user transactions routes
-    Route::get('/transactions', [App\Http\Controllers\UserTransactionController::class, 'index'])->name('transaction.index');
+        // user transactions routes
+        Route::get('/transactions', [App\Http\Controllers\UserTransactionController::class, 'index'])->name('transaction.index');
 
-    // status routes
-    Route::get('/status', [App\Http\Controllers\StatusController::class, 'index'])->name('status.index');
+        // status routes
+        Route::get('/status', [App\Http\Controllers\StatusController::class, 'index'])->name('status.index');
 
-    // inbox routes
-    Route::get('/inbox', [App\Http\Controllers\InboxController::class, 'index'])->name('inbox.index');
-    Route::put('/inbox/mark-as-read/{message}', [App\Http\Controllers\InboxController::class, 'markAsRead'])->name('inbox.mark-as-read');
+        // inbox routes
+        Route::get('/inbox', [App\Http\Controllers\InboxController::class, 'index'])->name('inbox.index');
+        Route::put('/inbox/mark-as-read/{message}', [App\Http\Controllers\InboxController::class, 'markAsRead'])->name('inbox.mark-as-read');
 
-    // delivery routes
-    Route::get('/deliveries', [App\Http\Controllers\DeliveryController::class, 'index'])->name('delivery.index');
-    Route::get('/find-deliveries', [App\Http\Controllers\DeliveryController::class, 'create'])->name('delivery.create');
-    Route::post('/deliveries/store', [App\Http\Controllers\DeliveryController::class, 'store'])->name('delivery.store');
-    Route::put('/deliveries/update/{delivery}', [App\Http\Controllers\DeliveryController::class, 'update'])->name('delivery.update');
+        // delivery routes
+        Route::get('/deliveries', [App\Http\Controllers\DeliveryController::class, 'index'])->name('delivery.index');
+        Route::get('/find-deliveries', [App\Http\Controllers\DeliveryController::class, 'create'])->name('delivery.create');
+        Route::post('/deliveries/store', [App\Http\Controllers\DeliveryController::class, 'store'])->name('delivery.store');
+        Route::put('/deliveries/update/{delivery}', [App\Http\Controllers\DeliveryController::class, 'update'])->name('delivery.update');
+    });
 
+    // subscription routes
+    Route::get('/subscriptions', [App\Http\Controllers\SubscriptionController::class, 'index'])->name('subscription.index');
+    Route::get('/subscriptions/create/{plan}', [App\Http\Controllers\SubscriptionController::class, 'create'])->name('subscription.create');
+    Route::get('/subscriptions/store', [App\Http\Controllers\SubscriptionController::class, 'store'])->name('subscription.store');
+
+    // plan routes
+    Route::get('/plans', [App\Http\Controllers\PlanController::class, 'index'])->name('plan.index');
 });
 
 require __DIR__.'/auth.php';

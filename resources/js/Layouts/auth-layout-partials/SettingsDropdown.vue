@@ -53,12 +53,21 @@ const { currentTheme, toggleTheme } = useTheme();
                         <h4 class="text-sm font-semibold text-zinc-600 dark:text-zinc-400 mb-2 uppercase tracking-wide">Account</h4>
                         <ul class="space-y-2">
                             <li>
-                                <Link 
+                                <Link
                                     href="/profile"
                                     class="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                                 >
                                     <i class="ri-user-line text-lg w-5"></i>
                                     <span>Profile Settings</span>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href="/subscriptions"
+                                    class="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                                >
+                                    <i class="ri-riding-line text-lg w-5"></i>
+                                    <span>Subscription</span>
                                 </Link>
                             </li>
                             <li>
@@ -75,7 +84,7 @@ const { currentTheme, toggleTheme } = useTheme();
                     <hr class="border-zinc-200 dark:border-zinc-700" />
                     <ul class="space-y-2">
                         <li>
-                            <Link 
+                            <Link
                                 href="/logout"
                                 class="flex items-center gap-3 px-3 py-2 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors w-full"
                                 method="post"

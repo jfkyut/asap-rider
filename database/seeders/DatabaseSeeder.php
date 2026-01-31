@@ -16,6 +16,10 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+        $this->call([
+            PlanSeeder::class
+        ]);
+
         $users = [
             [
                 'name' => 'Admin User',

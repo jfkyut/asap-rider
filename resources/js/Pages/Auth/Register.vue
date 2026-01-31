@@ -77,6 +77,8 @@ const submit = () => {
                         type="tel"
                         class="mt-1 block w-full"
                         v-model="form.phone"
+                        min="11"
+                        max="11"
                         required
                         autocomplete="username"
                     />

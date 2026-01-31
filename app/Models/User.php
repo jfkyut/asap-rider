@@ -64,4 +64,34 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\Delivery\Delivery::class);
     }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(\App\Models\Subscription\Subscription::class, 'user_id');
+    }
+
+    public function isSubscriber()
+    {
+        $subscription = $this->subscriptions()->latest()->first();
+
+        if ($subscription && $subscription->end_date >= now()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function currentSubscription()
+    {
+        return $this->subscriptions()->latest()->first();
+    }
+
+    public function consumedTrialPlan()
+    {
+        $subscription = $this->subscriptions()->whereHas('plan', function ($query) {
+            $query->where('name', 'Trial Plan');
+        })->first();
+
+        return $subscription !== null;
+    }
 }
