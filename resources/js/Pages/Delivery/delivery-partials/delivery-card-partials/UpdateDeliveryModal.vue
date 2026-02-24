@@ -23,7 +23,7 @@ const travelPerKm = ref(15);
 const form = ref(
     useForm({
         status: null,
-        bill_amount: null,
+        // bill_amount: null,
         distance_travelled: null,
         total_payment: null,
     })
@@ -48,7 +48,6 @@ watch(isShowModal, (isShowModal) => {
     if (isShowModal) {
         setTimeout(() => {
             form.value.status = delivery.value.status;
-            form.value.bill_amount = delivery.value.bill_amount;
             form.value.distance_travelled = delivery.value.distance_travelled;
             form.value.total_payment = delivery.value.total_payment;
         }, 300);
@@ -57,8 +56,8 @@ watch(isShowModal, (isShowModal) => {
 
 watch(() => form.value, (form) => {
     if (form.distance_travelled !== null && form.bill_amount !== null) {
-        const distanceInKm = form.distance_travelled / 1000;
-        const calculatedTotal = (parseFloat(form.bill_amount) + travelFee.value + (travelPerKm.value * distanceInKm)).toFixed(2);
+        const distanceInKm = form.distance_travelled / 1;
+        const calculatedTotal = (travelPerKm.value * distanceInKm).toFixed(2);
         form.total_payment = parseFloat(calculatedTotal);
     } else {
         form.total_payment = null;
@@ -90,6 +89,14 @@ watch(() => form.value, (form) => {
                         <Button severity="secondary" size="small" variant="outlined" @click="isShowModal = false">
                             <span class="text-xs">Close</span>
                         </Button>
+                        <Button
+                            size="small"
+                            :loading="form.processing"
+                            @click="submitButtonRef.click()"
+                            severity="success"
+                        >
+                            <span class="text-xs">Update</span>
+                        </Button>
                     </div>
                 </div>
             </template>
@@ -113,16 +120,7 @@ watch(() => form.value, (form) => {
                             />
                             <label for="status">Status</label>
                         </FloatLabel>
-                        <FloatLabel variant="on">
-                            <InputText
-                                name="bill_amount "
-                                type="number"
-                                step="0.10"
-                                v-model="form.bill_amount"
-                                class="w-full"
-                            />
-                            <label for="bill_amount">Bill Amount (₱)</label>
-                        </FloatLabel>
+
                         <FloatLabel variant="on">
                             <InputText
                                 name="distance_travelled"
@@ -131,7 +129,7 @@ watch(() => form.value, (form) => {
                                 v-model="form.distance_travelled"
                                 class="w-full"
                             />
-                            <label for="distance_travelled">Distance Travelled (m)</label>
+                            <label for="distance_travelled">Distance Travelled (km)</label>
                         </FloatLabel>
                         <FloatLabel variant="on">
                             <InputText
@@ -149,7 +147,7 @@ watch(() => form.value, (form) => {
                 </form>
 
             </template>
-            <template #footer>
+            <!-- <template #footer>
                 <div class="flex justify-end items-center gap-2">
                     <Button
                         severity="secondary"
@@ -159,16 +157,9 @@ watch(() => form.value, (form) => {
                     >
                         <span>Cancel</span>
                     </Button>
-                    <Button
-                        size="small"
-                        :loading="form.processing"
-                        @click="submitButtonRef.click()"
-                        severity="success"
-                    >
-                        <span>Update</span>
-                    </Button>
+
                 </div>
-            </template>
+            </template> -->
         </Container>
     </Modal>
 </template>

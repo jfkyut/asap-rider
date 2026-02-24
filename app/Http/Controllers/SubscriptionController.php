@@ -48,7 +48,6 @@ class SubscriptionController extends Controller
                             'https://api.paymongo.com/v1/checkout_sessions',
                             [
                                 'data' => [
-                                    'id' => 'cs_CbFCTDfxvMFNjwjVi26Uzhtj',
                                     'type' => 'checkout_session',
                                     'attributes' => [
                                         'merchant' => 'JAM Subscription Service',
@@ -80,7 +79,7 @@ class SubscriptionController extends Controller
                                                 'quantity' => 1
                                             ],
                                         ],
-                                        'livemode' => true,
+                                        'livemode' => false,
                                         'payment_intent' => [
                                             'id' => 'pi_aJsHfCD2AmR9V5KBvtkW8XY2',
                                             'type' => 'payment_intent',
@@ -94,7 +93,6 @@ class SubscriptionController extends Controller
                                         ],
                                         'payment_method_types' => ['card', 'gcash',],
                                         'reference_number' => 'm2m39sj43h5lfFSA1sd',
-                                        'status' => 'active',
                                     ]
                                 ]
                             ]

@@ -156,7 +156,7 @@ class DeliveryController extends Controller
     {
         $delivery->update([
             'status' => $request->input('status'),
-            'bill_amount' => $request->input('bill_amount'),
+            // 'bill_amount' => $request->input('bill_amount'),
             'distance_travelled' => $request->input('distance_travelled'),
             'total_payment' => $request->input('total_payment'),
         ]);

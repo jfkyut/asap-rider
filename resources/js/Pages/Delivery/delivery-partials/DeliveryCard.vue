@@ -147,7 +147,7 @@ const getStatusColor = (status) => {
             <div class="p-3 border-t border-zinc-100 dark:border-zinc-700 bg-white dark:bg-zinc-800">
                 <p class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 mb-3">PAYMENT DETAILS</p>
                 <div class="space-y-2">
-                    <div class="flex justify-between items-center">
+                    <div class="flex justify-between items-center" v-if="delivery.type === 'pasuyo'">
                         <span class="text-xs text-zinc-600 dark:text-zinc-400">Bill Amount</span>
                         <span class="text-xs font-medium text-zinc-900 dark:text-zinc-100">₱{{ delivery?.bill_amount ? parseFloat(delivery.bill_amount).toFixed(2) : '0.00' }}</span>
                     </div>
@@ -157,7 +157,7 @@ const getStatusColor = (status) => {
                     </div>
                     <div v-if="delivery?.distance_travelled" class="flex justify-between items-center">
                         <span class="text-xs text-zinc-600 dark:text-zinc-400">Travel Fee</span>
-                        <span class="text-xs font-medium text-zinc-900 dark:text-zinc-100">₱30.00 + ₱15.00/km</span>
+                        <span class="text-xs font-medium text-zinc-900 dark:text-zinc-100">₱15.00/km</span>
                     </div>
                     <div class="pt-2 border-t border-zinc-200 dark:border-zinc-700 flex justify-between items-center">
                         <span class="text-xs font-semibold text-zinc-900 dark:text-zinc-100">Total Payment</span>
