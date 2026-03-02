@@ -35,6 +35,7 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'phone' => 'required|string|max:20|unique:'.User::class,
+            'valid_id' => 'required|file|mimes:jpg,jpeg,png,pdf',
             'role' => 'required|in:user,admin,rider',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
@@ -47,13 +48,17 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // $plan = Plan::where('name', 'Trial Plan')->first();
+        if ($request->hasFile('valid_id')) {
+            $file = $request->file('valid_id');
+            $path = $file->store('valid_ids', 'public');
 
-        // $user->subscriptions()->create([
-        //     'plan_id' => $plan->id,
-        //     'start_date' => now(),
-        //     'end_date' => now()->addDays($plan->duration),
-        // ]);
+            $user->attachments()->create([
+                'file_path' => $path,
+                'type' => 'valid_id',
+            ]);
+        }
+
+        
 
         event(new Registered($user));
 

@@ -15,7 +15,7 @@ use Inertia\Inertia;
 // });
 
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'face_verified'])->group(function () {
 
     Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
@@ -56,6 +56,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // plan routes
     Route::get('/plans', [App\Http\Controllers\PlanController::class, 'index'])->name('plan.index');
+
 });
+
+Route::get('/face-verification', [App\Http\Controllers\FaceVerificationController::class, 'index'])->name('face-verification.index');
+Route::post('/face-verification', [App\Http\Controllers\FaceVerificationController::class, 'store'])->name('face-verification.store');
+
 
 require __DIR__.'/auth.php';

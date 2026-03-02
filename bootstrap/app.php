@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'subscriber' => \App\Http\Middleware\EnsureIsSubscriber::class,
+            'face_verified' => \App\Http\Middleware\EnsureIsFaceVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
