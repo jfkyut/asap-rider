@@ -3,7 +3,7 @@
 import { ref } from 'vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import { Button } from 'primevue';
-import { useForm, Head } from '@inertiajs/vue3';
+import { useForm, Head, router } from '@inertiajs/vue3';
 import { useToast } from 'vue-toastification';
 
 const videoRef = ref(null);
@@ -21,13 +21,13 @@ const form = useForm({
 const startFaceVerification = async () => {
     try {
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            const stream = await navigator.mediaDevices.getUserMedia({ 
+            const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
                     width: { ideal: 1280 },
                     height: { ideal: 720 }
                 }
             });
-            
+
             currentStream.value = stream;
             videoRef.value.srcObject = stream;
             isVideoActive.value = true;
@@ -44,20 +44,20 @@ const capturePhoto = () => {
     if (videoRef.value && canvasRef.value) {
         const context = canvasRef.value.getContext('2d');
         const video = videoRef.value;
-        
+
         canvasRef.value.width = video.videoWidth;
         canvasRef.value.height = video.videoHeight;
-        
+
         context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-        
+
         // Convert canvas to blob and create File object
         canvasRef.value.toBlob((blob) => {
             const file = new File([blob], `face-verification-${Date.now()}.jpg`, { type: 'image/jpeg' });
             capturedImageFile.value = file;
-            
+
             // Also create a preview URL from the blob
             capturedImage.value = URL.createObjectURL(blob);
-            
+
             console.log(capturedImageFile.value);
         }, 'image/jpeg', 0.95);
     }
@@ -118,7 +118,7 @@ const submitPhoto = async () => {
             <!-- Video Stream Section -->
             <div v-if="!capturedImage" class="max-w-md mx-auto">
                 <div class="bg-gray-900 rounded-lg overflow-hidden mb-6">
-                    <video 
+                    <video
                         ref="videoRef"
                         class="w-full aspect-video object-cover"
                         autoplay
@@ -128,21 +128,21 @@ const submitPhoto = async () => {
                 </div>
 
                 <div class="space-y-3">
-                    <Button 
+                    <Button
                         v-if="!isVideoActive"
                         @click="startFaceVerification"
                         class="w-full"
                         label="Start Camera"
                         severity="info"
                     />
-                    <Button 
+                    <Button
                         v-if="isVideoActive"
                         @click="capturePhoto"
                         class="w-full"
                         label="Capture Photo"
                         severity="success"
                     />
-                    <Button 
+                    <Button
                         v-if="isVideoActive"
                         @click="stopCamera"
                         class="w-full"
@@ -155,7 +155,7 @@ const submitPhoto = async () => {
             <!-- Captured Image Preview Section -->
             <div v-else class="max-w-md mx-auto">
                 <div class="bg-gray-100 rounded-lg overflow-hidden mb-6">
-                    <img 
+                    <img
                         :src="capturedImage"
                         alt="Captured face"
                         class="w-full aspect-video object-cover"
@@ -169,19 +169,29 @@ const submitPhoto = async () => {
                 </div>
 
                 <div class="space-y-3">
-                    <Button 
+                    <Button
                         @click="retakePhoto"
                         class="w-full"
                         label="Retake Photo"
                         severity="secondary"
                     />
-                    <Button 
+                    <Button
                         @click="submitPhoto"
                         class="w-full"
                         label="Submit"
                         severity="success"
                     />
                 </div>
+            </div>
+
+            <div class="my-2">
+                <Button
+                    @click="router.post(route('logout'))"
+                    severity="danger"
+                    variant="outlined"
+                    class="w-full"
+                    label="Log Out"
+                />
             </div>
 
             <!-- Hidden Canvas for Image Capture -->
