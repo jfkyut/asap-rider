@@ -158,7 +158,7 @@ const submitPhoto = async () => {
                     <img
                         :src="capturedImage"
                         alt="Captured face"
-                        class="w-full aspect-video object-cover"
+                        class="w-full aspect-square object-cover"
                     />
                 </div>
 
