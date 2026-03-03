@@ -120,7 +120,7 @@ const submitPhoto = async () => {
                 <div class="bg-gray-900 rounded-lg overflow-hidden mb-6">
                     <video
                         ref="videoRef"
-                        class="w-full aspect-video object-cover"
+                        class="w-full aspect-square object-cover"
                         autoplay
                         playsinline
                         muted
