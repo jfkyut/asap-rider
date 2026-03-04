@@ -6,6 +6,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { InputText, Button, FloatLabel } from 'primevue';
+import { useCommon } from '@/Composables/common';
 
 const form = useForm({
     name: '',
@@ -16,6 +17,8 @@ const form = useForm({
     password: '',
     password_confirmation: '',
 });
+
+const { setFiles } = useCommon();
 
 const submit = () => {
     form.post(route('register'), {
@@ -78,8 +81,6 @@ const submit = () => {
                         type="tel"
                         class="mt-1 block w-full"
                         v-model="form.phone"
-                        min="11"
-                        max="11"
                         required
                         autocomplete="username"
                     />
@@ -98,6 +99,7 @@ const submit = () => {
                         class="mt-1 block w-full"
                         @change="(e) => setFiles(e, (files) => form.valid_id = files[0])"
                         required
+                        placeholder="valid id"
                         autocomplete="username"
                     />
                 </FloatLabel>
