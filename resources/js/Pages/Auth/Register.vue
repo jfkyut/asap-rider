@@ -12,6 +12,7 @@ const form = useForm({
     email: '',
     phone: '',
     role: 'rider',
+    valid_id: null,
     password: '',
     password_confirmation: '',
 });
@@ -85,6 +86,23 @@ const submit = () => {
                 </FloatLabel>
 
                 <InputError class="mt-2" :message="form.errors.phone" />
+            </div>
+
+            <div class="mt-4">
+                <FloatLabel variant="on">
+                    <InputLabel for="valid_id" value="Valid ID" />
+
+                    <InputText
+                        id="valid_id"
+                        type="file"
+                        class="mt-1 block w-full"
+                        @change="(e) => setFiles(e, (files) => form.valid_id = files[0])"
+                        required
+                        autocomplete="username"
+                    />
+                </FloatLabel>
+
+                <InputError class="mt-2" :message="form.errors.valid_id" />
             </div>
 
             <div class="mt-4">
