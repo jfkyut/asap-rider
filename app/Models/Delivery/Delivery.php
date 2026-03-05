@@ -36,4 +36,9 @@ class Delivery extends Model
     {
         return $this->hasMany(DeliveryTracking::class);
     }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(DeliveryFeedback::class, 'delivery_id');
+    }
 }

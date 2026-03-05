@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DeliveryFeedbackController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -57,6 +58,7 @@ Route::middleware(['auth', 'verified', 'face_verified'])->group(function () {
     // plan routes
     Route::get('/plans', [App\Http\Controllers\PlanController::class, 'index'])->name('plan.index');
 
+    Route::post('delivery-feedback/{delivery}/store', [DeliveryFeedbackController::class, 'store'])->name('delivery-feedback.store');
 });
 
 Route::get('/face-verification', [App\Http\Controllers\FaceVerificationController::class, 'index'])->name('face-verification.index');
