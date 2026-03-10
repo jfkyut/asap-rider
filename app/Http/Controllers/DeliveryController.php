@@ -38,6 +38,7 @@ class DeliveryController extends Controller
                                                 'pasuyo',
                                                 'pickAndDrop',
                                                 'trackings',
+                                                'feedbacks'
                                             ])
                                             ->latest()
                                             ->paginate(100)

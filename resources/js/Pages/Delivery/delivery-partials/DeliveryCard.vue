@@ -5,6 +5,7 @@ import LocationRouteModal from '@/Pages/User/transaction-partials/pickanddrop-ta
 import { Tag, Button } from 'primevue';
 import UpdateDeliveryModal from './delivery-card-partials/UpdateDeliveryModal.vue';
 import TrackingModal from './delivery-card-partials/TrackingModal.vue';
+import FeedbackModal from '@/Components/FeedbackModal.vue';
 
 defineProps({
     deliveryList: {
@@ -178,10 +179,13 @@ const getStatusColor = (status) => {
                 />
                 <TrackingModal :delivery="delivery" />
                 <UpdateDeliveryModal
-                    v-if="route().queryParams.status !== 'completed' && route().queryParams.status !== 'cancelled'"
+                    v-if="delivery?.status !== 'completed' && delivery?.status !== 'cancelled'"
                     :delivery="delivery"
                 />
-
+                <FeedbackModal
+                    v-if="delivery?.status === 'completed' && delivery?.feedbacks?.length > 0 || delivery?.status === 'cancelled' && delivery?.feedbacks?.length > 0"
+                    :delivery="delivery"
+                />
             </div>
         </div>
     </div>
