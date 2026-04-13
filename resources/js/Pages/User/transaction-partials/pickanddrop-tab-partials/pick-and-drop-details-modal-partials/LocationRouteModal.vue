@@ -30,7 +30,6 @@ const pickUpLocation  = async () => {
 <template>
     <Button
         @click="pickUpLocation"
-        label="Map"
         severity="info"
         size="small"
         icon="ri-map-pin-line"
@@ -41,12 +40,10 @@ const pickUpLocation  = async () => {
         :coordinates="[
             pickAndDrop?.sender_location_coordinates,
             pickAndDrop?.receiver_location_coordinates,
-            myLocation
         ]"
         :labels="[
             'Pick-up Location',
             'Drop Location',
-            'My Location'
         ]"
         :show="isShowModal"
         @close="isShowModal = false"

@@ -15,8 +15,12 @@ return new class extends Migration
             $table->id();
             $table->longText('location');
             $table->longText('location_coordinates')->nullable();
+            $table->longText('landmark_location')->nullable();
+            $table->longText('landmark_location_coordinates')->nullable();
             $table->string('full_name');
             $table->string('phone');
+
+            $table->longText('location_details')->nullable();
             $table->longText('note')->nullable();
             $table->longText('content');
             $table->string('budget');

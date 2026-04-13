@@ -19,7 +19,6 @@ const isShowModal = ref(false);
     <Button
         @click="isShowModal = true"
         size="small"
-        label="Trackings"
         icon="ri-history-line"
         severity="secondary"
         variant="outlined"

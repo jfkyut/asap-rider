@@ -18,7 +18,6 @@ const isShowModal = ref(false);
         variant="outlined"
     >
         <i class="ri-feedback-line"></i>
-        <span>Feedback</span>
     </Button>
 
     <Modal

@@ -4,7 +4,7 @@ import Modal from './Modal.vue';
 import Map from './Map.vue';
 import { ref, computed, watch, toRefs } from 'vue';
 import Overlay from 'ol/Overlay';
-import axios from 'axios';
+import { useDistance } from '@/Composables/distance';
 
 const props = defineProps({
     coordinates: {
@@ -22,6 +22,7 @@ const props = defineProps({
 })
 
 const { coordinates, show, labels } = toRefs(props);
+const { fetchDistance } = useDistance();
 
 const vectorSource = ref(null);
 const visibleLabels = ref(new Set());
@@ -29,8 +30,6 @@ const isLoadingRoute = ref(false);
 const routeCoordinates = ref([]);
 const routeDistance = ref(null);
 const routeDuration = ref(null);
-
-const OPEN_ROUTE_SERVICE_KEY = import.meta.env.VITE_OPEN_ROUTE_SERVICE_KEY || '';
 
 const parsedCoordinates = computed(() => {
     if (!coordinates.value || coordinates.value.length === 0) return [];
@@ -63,42 +62,54 @@ const isLabelVisible = (index) => {
     return visibleLabels.value.has(index);
 }
 
-watch(show, (show) => {
+watch(show, async (show) => {
     if (show) {
         isLoadingRoute.value = true;
 
         // If there are exactly two coordinates, fetch route data
         if (parsedCoordinates.value.length >= 2) {
+            try {
+                // Using the distance composable which includes API call and returns distance
+                const distance = await fetchDistance(
+                    parsedCoordinates.value[0],
+                    parsedCoordinates.value[1]
+                );
 
-            axios.post('https://api.openrouteservice.org/v2/directions/driving-car/geojson', {
-                coordinates: parsedCoordinates.value
-            }, {
-                headers: {
-                    'Authorization': OPEN_ROUTE_SERVICE_KEY,
-                    'Content-Type': 'application/json',
+                if (distance !== null) {
+                    routeDistance.value = distance;
                 }
-            }).then(response => {
-                const routeGeoJSON = response.data;
-                // Extract route coordinates from the geometry
-                if (routeGeoJSON.features && routeGeoJSON.features.length > 0) {
-                    const geometry = routeGeoJSON.features[0].geometry;
-                    const properties = routeGeoJSON.features[0].properties;
-                    if (geometry.type === 'LineString') {
-                        routeCoordinates.value = geometry.coordinates;
-                    }
-                    // Extract distance and duration from properties
-                    if (properties) {
-                        routeDistance.value = (properties.summary?.distance || 0) / 1000; // Convert to km
-                        routeDuration.value = Math.round((properties.summary?.duration || 0) / 60); // Convert to minutes
-                    }
-                }
-                console.log(routeGeoJSON);
 
-            }).catch(error => {
+                // Also fetch the route geometry for drawing the line
+                const response = await fetch('https://api.openrouteservice.org/v2/directions/driving-car/geojson', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': import.meta.env.VITE_OPEN_ROUTE_SERVICE_KEY || '',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        coordinates: parsedCoordinates.value
+                    })
+                });
+
+                if (response.ok) {
+                    const routeGeoJSON = await response.json();
+                    if (routeGeoJSON.features && routeGeoJSON.features.length > 0) {
+                        const geometry = routeGeoJSON.features[0].geometry;
+                        const properties = routeGeoJSON.features[0].properties;
+                        if (geometry.type === 'LineString') {
+                            routeCoordinates.value = geometry.coordinates;
+                        }
+                        // Extract duration from properties
+                        if (properties) {
+                            routeDuration.value = Math.round((properties.summary?.duration || 0) / 60);
+                        }
+                    }
+                }
+            } catch (error) {
                 console.error('Error fetching route data:', error);
-            }).finally(() => {
+            } finally {
                 isLoadingRoute.value = false;
-            });
+            }
         } else {
             isLoadingRoute.value = false;
         }

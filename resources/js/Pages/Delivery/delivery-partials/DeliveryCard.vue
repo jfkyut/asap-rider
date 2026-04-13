@@ -6,6 +6,7 @@ import { Tag, Button } from 'primevue';
 import UpdateDeliveryModal from './delivery-card-partials/UpdateDeliveryModal.vue';
 import TrackingModal from './delivery-card-partials/TrackingModal.vue';
 import FeedbackModal from '@/Components/FeedbackModal.vue';
+import ProofModal from './delivery-card-partials/ProofModal.vue';
 
 defineProps({
     deliveryList: {
@@ -54,7 +55,7 @@ const getStatusColor = (status) => {
             </div>
 
             <template v-if="delivery?.type === 'pasuyo'">
-                <!-- Pasuyo Destination -->
+                <!-- Pasuyo Drop-off Location -->
                 <div class="p-3 border-b border-zinc-100 dark:border-zinc-700">
                     <div class="flex gap-2">
                         <div class="flex-shrink-0">
@@ -63,12 +64,28 @@ const getStatusColor = (status) => {
                             </div>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <p class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 mb-1">DELIVERY LOCATION</p>
+                            <p class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 mb-1">DROP-OFF LOCATION</p>
                             <p class="text-sm font-medium text-zinc-900 dark:text-zinc-100 mb-0.5">{{ getDeliveryData(delivery).full_name }}</p>
                             <p class="text-xs text-zinc-600 dark:text-zinc-400 mb-1">{{ getDeliveryData(delivery).location }}</p>
+                            <p v-if="getDeliveryData(delivery).location_details" class="text-xs text-zinc-600 dark:text-zinc-400 mb-1">{{ getDeliveryData(delivery).location_details }}</p>
                             <a :href="`tel:${getDeliveryData(delivery).phone}`" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">
                                 {{ getDeliveryData(delivery).phone }}
                             </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pasuyo Shopping Area (Landmark) -->
+                <div v-if="getDeliveryData(delivery).landmark_location" class="p-3 border-b border-zinc-100 dark:border-zinc-700">
+                    <div class="flex gap-2">
+                        <div class="flex-shrink-0">
+                            <div class="w-6 h-6 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center">
+                                <i class="ri-shopping-cart-2-line text-amber-600 dark:text-amber-400 text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 mb-1">SHOPPING AREA</p>
+                            <p class="text-xs text-zinc-900 dark:text-zinc-100">{{ getDeliveryData(delivery).landmark_location }}</p>
                         </div>
                     </div>
                 </div>
@@ -153,8 +170,8 @@ const getStatusColor = (status) => {
                         <span class="text-xs font-medium text-zinc-900 dark:text-zinc-100">₱{{ delivery?.bill_amount ? parseFloat(delivery.bill_amount).toFixed(2) : '0.00' }}</span>
                     </div>
                     <div v-if="delivery?.distance_travelled" class="flex justify-between items-center">
-                        <span class="text-xs text-zinc-600 dark:text-zinc-400">Distance Travelled</span>
-                        <span class="text-xs font-medium text-zinc-900 dark:text-zinc-100">{{ (delivery.distance_travelled / 1000).toFixed(2) }} km</span>
+                        <span class="text-xs text-zinc-600 dark:text-zinc-400">Distance</span>
+                        <span class="text-xs font-medium text-zinc-900 dark:text-zinc-100">{{ delivery.distance_travelled }} km</span>
                     </div>
                     <div v-if="delivery?.distance_travelled" class="flex justify-between items-center">
                         <span class="text-xs text-zinc-600 dark:text-zinc-400">Travel Fee</span>
@@ -182,10 +199,15 @@ const getStatusColor = (status) => {
                     v-if="delivery?.status !== 'completed' && delivery?.status !== 'cancelled'"
                     :delivery="delivery"
                 />
+                <ProofModal
+                    v-if="delivery?.attachments?.length > 0"
+                    :attachments="delivery.attachments"
+                />
                 <FeedbackModal
                     v-if="delivery?.status === 'completed' && delivery?.feedbacks?.length > 0 || delivery?.status === 'cancelled' && delivery?.feedbacks?.length > 0"
                     :delivery="delivery"
                 />
+                
             </div>
         </div>
     </div>

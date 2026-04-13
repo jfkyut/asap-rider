@@ -6,6 +6,7 @@ import { ref, toRefs, watch } from 'vue';
 import Container from '@/Components/Container.vue';
 import { useForm } from '@inertiajs/vue3';
 import { useToast } from 'vue-toastification';
+import { useCommon } from '@/Composables/common';
 
 const props = defineProps({
     delivery: Object,
@@ -16,22 +17,24 @@ const { delivery } = toRefs(props);
 const isShowModal = ref(false);
 const toast = useToast();
 const submitButtonRef = ref(null);
+const { setFiles } = useCommon();
 
-const travelFee = ref(30);
 const travelPerKm = ref(15);
 
 const form = ref(
     useForm({
+        _method: 'put',
         status: null,
-        // bill_amount: null,
+        bill_amount: null,
         distance_travelled: null,
         total_payment: null,
+        proofs: []
     })
 )
 
 const submit = (delivery) => {
 
-    form.value.put(route('delivery.update', delivery.id), {
+    form.value.post(route('delivery.update', delivery.id), {
         onSuccess: () => {
             isShowModal.value = false;
             toast.success('Delivery updated successfully!');
@@ -49,20 +52,35 @@ watch(isShowModal, (isShowModal) => {
         setTimeout(() => {
             form.value.status = delivery.value.status;
             form.value.distance_travelled = delivery.value.distance_travelled;
+            form.value.bill_amount = delivery.value.bill_amount;
+
+            console.log(delivery.value);
+            
             form.value.total_payment = delivery.value.total_payment;
         }, 300);
     }
 });
 
 watch(() => form.value, (form) => {
-    if (form.distance_travelled !== null && form.bill_amount !== null) {
+    if (form.distance_travelled !== null) {
         const distanceInKm = form.distance_travelled / 1;
-        const calculatedTotal = (travelPerKm.value * distanceInKm).toFixed(2);
-        form.total_payment = parseFloat(calculatedTotal);
+        const travelCost = (travelPerKm.value * distanceInKm);
+        
+        // For pasuyo, add bill_amount to travel cost; for pick_and_drop, just use travel cost
+        if (delivery.value.type === 'pasuyo' && form.bill_amount !== null) {
+            const calculatedTotal = (parseFloat(form.bill_amount) + travelCost).toFixed(2);
+            form.total_payment = parseFloat(calculatedTotal);
+        } else {
+            const calculatedTotal = travelCost.toFixed(2);
+            form.total_payment = parseFloat(calculatedTotal);
+        }
     } else {
         form.total_payment = null;
     }
-}, { deep: true });
+}, { 
+    deep: true,
+    immediate: true, 
+});
 
 </script>
 
@@ -72,7 +90,6 @@ watch(() => form.value, (form) => {
         size="small"
     >
         <i class="ri-edit-line"></i>
-        <span>Edit</span>
     </Button>
 
     <Modal
@@ -123,13 +140,24 @@ watch(() => form.value, (form) => {
 
                         <FloatLabel variant="on">
                             <InputText
+                                readonly
                                 name="distance_travelled"
                                 type="number"
                                 step="0.01"
                                 v-model="form.distance_travelled"
                                 class="w-full"
                             />
-                            <label for="distance_travelled">Distance Travelled (km)</label>
+                            <label for="distance_travelled">Distance (km)</label>
+                        </FloatLabel>
+                        <FloatLabel v-if="delivery.type === 'pasuyo' && form.status === 'to_pay'" variant="on">
+                            <InputText
+                                name="bill_amount"
+                                type="number"
+                                step="0.10"
+                                v-model="form.bill_amount"
+                                class="w-full"
+                            />
+                            <label for="bill_amount">Bill Payment (₱)</label>
                         </FloatLabel>
                         <FloatLabel variant="on">
                             <InputText
@@ -138,9 +166,22 @@ watch(() => form.value, (form) => {
                                 step="0.10"
                                 v-model="form.total_payment"
                                 class="w-full"
-
+                                readonly
                             />
                             <label for="total_payment">Total Payment (₱)</label>
+                        </FloatLabel>
+                        <FloatLabel variant="on" v-if="delivery?.type === 'pasuyo' && form.status === 'to_pay'">
+                            <InputText
+                                type="file"
+                                name="proofs"
+                                step="0.10"
+                                placeholder="file"
+                                class="w-full"
+                                @change="(e) => setFiles(e, (files) => form.proofs = files)"
+                                multiple
+                                required
+                            />
+                            <label for="proofs">Proof of Payment</label>
                         </FloatLabel>
                     </div>
                     <button type="submit" class="sr-only" ref="submitButtonRef"></button>

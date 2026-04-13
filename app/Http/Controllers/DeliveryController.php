@@ -38,7 +38,8 @@ class DeliveryController extends Controller
                                                 'pasuyo',
                                                 'pickAndDrop',
                                                 'trackings',
-                                                'feedbacks'
+                                                'feedbacks',
+                                                'attachments',
                                             ])
                                             ->latest()
                                             ->paginate(100)
@@ -85,6 +86,9 @@ class DeliveryController extends Controller
             'type' => $request->input('type'),
             'pasuyo_id' => $request->input('pasuyo_id'),
             'pick_and_drop_id' => $request->input('pick_and_drop_id'),
+            'distance_travelled' => $request->input('distance_travelled', 0),
+            'bill_amount' => $request->input('bill_amount', 0),
+            'total_payment' => $request->input('total_payment', 0),
             'status' => 'accepted',
             'user_id' => $request->user()->id,
         ]);
@@ -159,8 +163,19 @@ class DeliveryController extends Controller
             'status' => $request->input('status'),
             // 'bill_amount' => $request->input('bill_amount'),
             'distance_travelled' => $request->input('distance_travelled'),
+            'bill_amount' => $request->input('bill_amount'),
             'total_payment' => $request->input('total_payment'),
         ]);
+
+        if ($request->hasFile('proofs')) {
+            foreach ($request->file('proofs') as $file) {
+                $filePath = $file->store('delivery_proofs', 'public');
+
+                $delivery->attachments()->create([
+                    'file_path' => $filePath,
+                ]);
+            }
+        }
 
         Message::create([
             'sender_id' => null,

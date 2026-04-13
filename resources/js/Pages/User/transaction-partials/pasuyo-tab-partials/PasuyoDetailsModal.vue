@@ -71,10 +71,22 @@ const { getStatusSeverity, formatDate } = useTransactions();
                                 <p class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 uppercase tracking-wide mb-1">Area</p>
                                 <p class="text-sm text-zinc-900 dark:text-white">{{ pasuyo.location }}</p>
                             </div>
+                            <div v-if="pasuyo?.location_details">
+                                <p class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 uppercase tracking-wide mb-1">Location Details</p>
+                                <p class="text-sm text-zinc-900 dark:text-white">{{ pasuyo.location_details }}</p>
+                            </div>
                             <div v-if="pasuyo?.location_coordinates">
                                 <p class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 uppercase tracking-wide mb-1">Coordinates</p>
                                 <p class="text-xs font-mono text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-900/50 p-2 rounded mb-3">{{ pasuyo.location_coordinates }}</p>
                                 <LocationModal :pasuyo="pasuyo" />
+                            </div>
+                            <div v-if="pasuyo?.landmark_location">
+                                <p class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 uppercase tracking-wide mb-1">Shopping Area</p>
+                                <p class="text-sm text-zinc-900 dark:text-white">{{ pasuyo.landmark_location }}</p>
+                            </div>
+                            <div v-if="pasuyo?.landmark_location_coordinates">
+                                <p class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 uppercase tracking-wide mb-1">Shopping Area Coordinates</p>
+                                <p class="text-xs font-mono text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-900/50 p-2 rounded">{{ pasuyo.landmark_location_coordinates }}</p>
                             </div>
                         </div>
                     </div>

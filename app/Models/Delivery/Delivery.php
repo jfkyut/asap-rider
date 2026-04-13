@@ -41,4 +41,9 @@ class Delivery extends Model
     {
         return $this->hasMany(DeliveryFeedback::class, 'delivery_id');
     }
+
+    public function attachments()
+    {
+        return $this->hasMany(DeliveryAttachment::class);
+    }
 }

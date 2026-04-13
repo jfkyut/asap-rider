@@ -12,9 +12,14 @@ class Pasuyo extends Model
     protected $fillable = [
         'location',
         'location_coordinates',
+        'landmark_location',
+        'landmark_location_coordinates',
         'full_name',
         'phone',
+
+        'location_details',
         'note',
+        
         'content',
         'budget',
         'status',
