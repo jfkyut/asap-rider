@@ -113,7 +113,7 @@ const submitPhoto = async () => {
     <GuestLayout>
         <div class="mx-auto">
             <h1 class="text-3xl font-bold mb-2">Face Verification</h1>
-            <p class="text-gray-600 mb-6">Capture a clear photo of your face for verification</p>
+            <p class="text-gray-600 mb-6">Capture a clear photo of your face for verification.</p>
 
             <!-- Video Stream Section -->
             <div v-if="!capturedImage" class="max-w-md mx-auto">
