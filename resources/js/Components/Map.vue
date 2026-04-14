@@ -12,7 +12,7 @@ const { coordinates } = toRefs(props);
 
 const center = ref(coordinates.value || [119.28242077814251, 10.5183862756608]);
 const projection = ref('EPSG:4326');
-const zoom = ref(17);
+const zoom = ref(14);
 
 const layerList = ref([]);
 const map = ref(null);

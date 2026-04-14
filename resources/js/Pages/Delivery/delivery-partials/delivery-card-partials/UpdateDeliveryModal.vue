@@ -128,7 +128,6 @@ watch(() => form.value, (form) => {
                                     { label: 'In Progress', value: 'in_progress' },
                                     { label: 'To Pay', value: 'to_pay' },
                                     { label: 'Completed', value: 'completed' },
-                                    { label: 'Cancelled', value: 'cancelled' }
                                 ]"
                                 option-label="label"
                                 option-value="value"
